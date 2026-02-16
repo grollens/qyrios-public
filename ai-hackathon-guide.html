@@ -836,12 +836,74 @@
         </div>
       </div>
 
-      <div style="background:linear-gradient(135deg,rgba(237,160,144,0.08),rgba(176,148,224,0.06));border:1px solid rgba(237,160,144,0.2);border-radius:var(--radius);padding:2rem;margin-top:2.5rem;text-align:center;">
-        <h3 style="font-size:1.2rem;font-weight:700;margin-bottom:0.75rem;">Tillg&auml;ngliga tabeller</h3>
-        <p style="color:var(--text-muted);font-size:0.9rem;max-width:650px;margin:0 auto 1.25rem;line-height:1.65;">Claude kan h&auml;mta data fr&aring;n Gastons Supabase Datahouse. Be Claude lista tabeller f&ouml;r att se vad som finns tillg&auml;ngligt, eller fr&aring;ga direkt om produkter, f&ouml;rs&auml;ljning, lager eller kunder.</p>
-        <div style="display:inline-flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--border);padding:8px 16px;border-radius:100px;font-size:0.82rem;font-weight:500;">
-          <span style="color:var(--accent-orange);">&#128161;</span>
-          <span style="color:var(--text-muted);">Prova: &rdquo;Vilka tabeller finns i Datahouse?&rdquo;</span>
+      <div style="margin-top:2.5rem;">
+        <h3 style="font-size:1.2rem;font-weight:700;margin-bottom:1.25rem;text-align:center;">Vad finns i Datahouse?</h3>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem;margin-bottom:1.5rem;">
+          <!-- Products -->
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:1.3rem;">
+            <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:0.75rem;">
+              <div style="font-size:1.6rem;">📦</div>
+              <div>
+                <div style="font-size:0.75rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;font-weight:600;">Products</div>
+                <div style="font-size:1.35rem;font-weight:700;color:var(--accent-orange);">3,877</div>
+              </div>
+            </div>
+            <p style="font-size:0.8rem;color:var(--text-muted);line-height:1.5;margin-bottom:0.5rem;">Produkter med 7,479 varianter, bilder, och collections</p>
+            <div style="font-size:0.72rem;color:var(--text-muted);opacity:0.7;">products • product_variants • product_images • collections</div>
+          </div>
+
+          <!-- Orders -->
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:1.3rem;">
+            <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:0.75rem;">
+              <div style="font-size:1.6rem;">🛒</div>
+              <div>
+                <div style="font-size:0.75rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;font-weight:600;">Orders</div>
+                <div style="font-size:1.35rem;font-weight:700;color:var(--accent-orange);">79,797</div>
+              </div>
+            </div>
+            <p style="font-size:0.8rem;color:var(--text-muted);line-height:1.5;margin-bottom:0.5rem;">Ordrar med 183K line items, fulfillments, refunds & returns</p>
+            <div style="font-size:0.72rem;color:var(--text-muted);opacity:0.7;">orders • order_line_items • order_fulfillments • returns</div>
+          </div>
+
+          <!-- Inventory -->
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:1.3rem;">
+            <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:0.75rem;">
+              <div style="font-size:1.6rem;">📊</div>
+              <div>
+                <div style="font-size:0.75rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;font-weight:600;">Inventory</div>
+                <div style="font-size:1.35rem;font-weight:700;color:var(--accent-orange);">30,538</div>
+              </div>
+            </div>
+            <p style="font-size:0.8rem;color:var(--text-muted);line-height:1.5;margin-bottom:0.5rem;">Inventory levels över 5 locations med item tracking</p>
+            <div style="font-size:0.72rem;color:var(--text-muted);opacity:0.7;">inventory_levels • inventory_items • locations</div>
+          </div>
+
+          <!-- Customers -->
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:1.3rem;">
+            <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:0.75rem;">
+              <div style="font-size:1.6rem;">👥</div>
+              <div>
+                <div style="font-size:0.75rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;font-weight:600;">Customers</div>
+                <div style="font-size:1.35rem;font-weight:700;color:var(--accent-orange);">46,144</div>
+              </div>
+            </div>
+            <p style="font-size:0.8rem;color:var(--text-muted);line-height:1.5;margin-bottom:0.5rem;">Anonymiserad kunddata (GDPR-säker, ingen PII)</p>
+            <div style="font-size:0.72rem;color:var(--text-muted);opacity:0.7;">customers • anonymized</div>
+          </div>
+        </div>
+
+        <div style="background:linear-gradient(135deg,rgba(237,160,144,0.08),rgba(176,148,224,0.06));border:1px solid rgba(237,160,144,0.2);border-radius:var(--radius);padding:1.5rem;text-align:center;">
+          <div style="display:inline-flex;align-items:center;gap:10px;margin-bottom:0.75rem;">
+            <span style="font-size:1.2rem;">💡</span>
+            <span style="font-size:0.95rem;font-weight:600;color:var(--text);">Exempel på frågor du kan ställa</span>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:700px;margin:0 auto;">
+            <span style="background:var(--surface);border:1px solid var(--border);padding:6px 14px;border-radius:100px;font-size:0.78rem;color:var(--text-muted);">"Vilka produkter säljer bäst?"</span>
+            <span style="background:var(--surface);border:1px solid var(--border);padding:6px 14px;border-radius:100px;font-size:0.78rem;color:var(--text-muted);">"Hur ser lagerbalansen ut?"</span>
+            <span style="background:var(--surface);border:1px solid var(--border);padding:6px 14px;border-radius:100px;font-size:0.78rem;color:var(--text-muted);">"Analysera order-trender senaste månaden"</span>
+            <span style="background:var(--surface);border:1px solid var(--border);padding:6px 14px;border-radius:100px;font-size:0.78rem;color:var(--text-muted);">"Hitta anomalier i försäljningsdata"</span>
+          </div>
         </div>
       </div>
     </div>
