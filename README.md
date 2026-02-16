@@ -1,13 +1,13 @@
-# qyrios-chat
+# qyrios-public (deploy copy for Content Interview)
 
-Public GitHub repo for the Content Interview chat page (GitHub Pages).  
-Source of truth for the HTML lives in `qyrios-backbone`; this repo is the deployed copy.
+Public GitHub repo **grollens/qyrios-public** for GitHub Pages (Content Interview chat and future public assets).  
+Source of truth for the HTML lives in `qyrios-backbone`; this folder is the deployed copy.
 
 ## One-time setup (create repo and enable Pages)
 
 1. **Create the repo on GitHub**
    - Go to https://github.com/new
-   - Repository name: `qyrios-chat`
+   - Repository name: `qyrios-public`
    - Visibility: **Public**
    - Do **not** add a README, .gitignore, or license (we're pushing existing content)
    - Click **Create repository**
@@ -19,7 +19,7 @@ Source of truth for the HTML lives in `qyrios-backbone`; this repo is the deploy
    git add interview-chat.html README.md
    git commit -m "Add interview chat page for GitHub Pages"
    git branch -M main
-   git remote add origin https://github.com/grollens/qyrios-chat.git
+   git remote add origin https://github.com/grollens/qyrios-public.git
    git push -u origin main
    ```
 
@@ -30,7 +30,7 @@ Source of truth for the HTML lives in `qyrios-backbone`; this repo is the deploy
    - Save
 
 4. **Verify**
-   - After 1–2 minutes, open: https://grollens.github.io/qyrios-chat/interview-chat.html?recordId=test  
+   - After 1–2 minutes, open: https://grollens.github.io/qyrios-public/interview-chat.html?recordId=test  
    - You should see the chat page (or the "Saknar innehålls-ID" message if recordId is missing).
 
 ## Updating the page
