@@ -30,36 +30,131 @@
     --radius-sm: 10px;
   }
 
-  body {
+  html, body {
     font-family: 'Inter', -apple-system, sans-serif;
     background: var(--bg);
     color: var(--text);
     line-height: 1.65;
     -webkit-font-smoothing: antialiased;
+    height: 100%;
+    overflow: hidden;
   }
 
-  /* --- Hero --- */
-  .hero {
-    min-height: 85vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 2rem;
+  /* ===== SLIDE SYSTEM ===== */
+  .slide-container {
+    height: 100vh;
+    width: 100vw;
     position: relative;
     overflow: hidden;
   }
-  .hero::before {
-    content: '';
+
+  .slide {
     position: absolute;
-    top: -40%;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 800px;
-    height: 800px;
-    background: radial-gradient(circle, rgba(232,123,53,0.08) 0%, transparent 70%);
+    top: 0; left: 0; right: 0; bottom: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 4rem 2rem 6rem;
+    opacity: 0;
+    transform: translateX(60px);
     pointer-events: none;
+    transition: opacity 0.45s ease, transform 0.45s ease;
+    overflow-y: auto;
+  }
+  .slide.active {
+    opacity: 1;
+    transform: translateX(0);
+    pointer-events: auto;
+  }
+  .slide.exit-left {
+    opacity: 0;
+    transform: translateX(-60px);
+  }
+
+  .slide-inner {
+    max-width: 1100px;
+    width: 100%;
+  }
+
+  /* ===== NAVIGATION ===== */
+  .nav-bar {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    height: 64px;
+    background: rgba(10, 10, 15, 0.92);
+    backdrop-filter: blur(16px);
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 2rem;
+    z-index: 100;
+  }
+
+  .nav-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 22px;
+    border-radius: 100px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    font-family: inherit;
+    font-size: 0.88rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    user-select: none;
+  }
+  .nav-btn:hover:not(:disabled) {
+    background: var(--surface-hover);
+    border-color: var(--accent-orange);
+    color: var(--accent-orange);
+  }
+  .nav-btn:disabled {
+    opacity: 0.25;
+    cursor: not-allowed;
+  }
+  .nav-btn svg { width: 16px; height: 16px; }
+
+  .nav-center {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .progress-dots {
+    display: flex;
+    gap: 6px;
+  }
+  .progress-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--border);
+    transition: all 0.3s;
+    cursor: pointer;
+  }
+  .progress-dot.active {
+    background: var(--accent-orange);
+    box-shadow: 0 0 8px rgba(232,123,53,0.4);
+    width: 24px;
+    border-radius: 4px;
+  }
+
+  .slide-counter {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    font-weight: 500;
+    min-width: 50px;
+    text-align: center;
+  }
+
+  /* ===== HERO SLIDE ===== */
+  .hero-slide {
+    text-align: center;
   }
   .hero-badge {
     display: inline-flex;
@@ -75,54 +170,59 @@
     margin-bottom: 2rem;
     letter-spacing: 0.02em;
   }
-  .hero h1 {
+  .hero-slide h1 {
     font-size: clamp(2.5rem, 6vw, 4.5rem);
     font-weight: 800;
     letter-spacing: -0.03em;
     line-height: 1.1;
     margin-bottom: 1.5rem;
     max-width: 850px;
+    margin-left: auto;
+    margin-right: auto;
   }
-  .hero h1 span {
+  .hero-slide h1 span {
     background: linear-gradient(135deg, var(--accent-orange), #f0a060);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }
-  .hero p {
+  .hero-slide p {
     font-size: 1.15rem;
     color: var(--text-muted);
     max-width: 620px;
-    margin-bottom: 1rem;
+    margin: 0 auto 1rem;
   }
-  .hero .hero-sub {
+  .hero-slide .hero-sub {
     font-size: 0.95rem;
     color: var(--text-muted);
     max-width: 520px;
     opacity: 0.7;
-    margin-bottom: 2.5rem;
+    margin: 0 auto 2.5rem;
   }
-  .scroll-hint {
+  .hero-slide::before {
+    content: '';
     position: absolute;
-    bottom: 2rem;
-    display: flex;
-    flex-direction: column;
+    top: -40%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 800px;
+    height: 800px;
+    background: radial-gradient(circle, rgba(232,123,53,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .start-hint {
+    display: inline-flex;
     align-items: center;
     gap: 8px;
     color: var(--text-muted);
-    font-size: 0.8rem;
-    animation: bounce 2s infinite;
+    font-size: 0.85rem;
+    animation: pulse 2s infinite;
   }
-  @keyframes bounce {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(8px); }
+  @keyframes pulse {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
   }
 
-  /* --- Sections --- */
-  .section {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 5rem 2rem;
-  }
+  /* ===== SECTION STYLES ===== */
   .section-label {
     display: inline-flex;
     align-items: center;
@@ -134,136 +234,164 @@
     color: var(--accent-orange);
     margin-bottom: 1rem;
   }
-  .section h2 {
+  .slide-inner h2 {
     font-size: clamp(1.8rem, 4vw, 2.8rem);
     font-weight: 700;
     letter-spacing: -0.02em;
     margin-bottom: 1rem;
   }
-  .section > p {
+  .slide-inner > p.section-desc {
     color: var(--text-muted);
     font-size: 1.05rem;
     max-width: 650px;
-    margin-bottom: 3rem;
+    margin-bottom: 2.5rem;
   }
 
-  /* --- Paradigm Section --- */
+  /* ===== TEKNIKVAL SLIDE ===== */
+  .teknikval-content {
+    max-width: 750px;
+  }
+  .teknikval-content .bar-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 1.5rem;
+  }
+  .teknikval-content .bar-title .bar {
+    width: 4px; height: 40px;
+    background: linear-gradient(to bottom, var(--accent-orange), var(--accent-purple));
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+  .teknikval-content h2 {
+    font-size: clamp(1.4rem, 3vw, 1.8rem);
+  }
+  .teknikval-content p {
+    color: var(--text-muted);
+    font-size: 1rem;
+    line-height: 1.75;
+    margin-bottom: 1.25rem;
+  }
+
+  /* ===== GLOSSARY ===== */
+  .glossary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1rem;
+  }
+  .glossary-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 1.2rem 1.4rem;
+  }
+  .glossary-card .gc-header {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-bottom: 0.4rem;
+  }
+  .glossary-card strong { font-size: 1rem; }
+  .glossary-card .gc-tag {
+    font-size: 0.72rem;
+    padding: 2px 8px;
+    border-radius: 4px;
+  }
+  .glossary-card p {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    line-height: 1.55;
+  }
+
+  /* ===== PARADIGM SLIDE ===== */
   .paradigm-intro {
     color: var(--text-muted);
     font-size: 1.05rem;
     max-width: 680px;
-    margin-bottom: 3.5rem;
+    margin-bottom: 2.5rem;
     line-height: 1.75;
   }
-  .paradigm-intro strong {
-    color: var(--text);
-    font-weight: 600;
-  }
+  .paradigm-intro strong { color: var(--text); font-weight: 600; }
 
-  .shift-journey {
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-    position: relative;
-  }
+  .shift-journey { display: flex; flex-direction: column; }
 
   .shift-step {
     display: grid;
-    grid-template-columns: 80px 1fr;
-    gap: 2rem;
+    grid-template-columns: 70px 1fr;
+    gap: 1.5rem;
     align-items: start;
-    position: relative;
   }
-
   .shift-line-container {
     display: flex;
     flex-direction: column;
     align-items: center;
-    position: relative;
   }
-
   .shift-number {
-    width: 52px;
-    height: 52px;
+    width: 48px; height: 48px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.1rem;
+    font-size: 1rem;
     font-weight: 800;
     flex-shrink: 0;
     z-index: 2;
-    position: relative;
   }
-
   .shift-connector {
     width: 2px;
-    height: 48px;
+    height: 40px;
     flex-shrink: 0;
   }
-
-  .shift-content {
-    padding-bottom: 3rem;
-  }
-
+  .shift-content { padding-bottom: 2rem; }
   .shift-content .shift-label {
     font-size: 0.72rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.1em;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.4rem;
     display: inline-block;
     padding: 3px 10px;
     border-radius: 6px;
   }
-
   .shift-content h3 {
-    font-size: 1.35rem;
+    font-size: 1.2rem;
     font-weight: 700;
-    margin-bottom: 0.4rem;
+    margin-bottom: 0.3rem;
     letter-spacing: -0.01em;
   }
-
   .shift-content .shift-from-to {
-    font-size: 0.92rem;
+    font-size: 0.88rem;
     color: var(--text-muted);
-    margin-bottom: 0.75rem;
+    margin-bottom: 0.6rem;
     font-weight: 500;
   }
-  .shift-content .shift-from-to .from { opacity: 0.5; text-decoration: line-through; }
-  .shift-content .shift-from-to .arrow { color: var(--accent-orange); margin: 0 8px; }
-
-  .shift-content p {
+  .shift-from-to .from { opacity: 0.5; text-decoration: line-through; }
+  .shift-from-to .arrow { color: var(--accent-orange); margin: 0 8px; }
+  .shift-content > p {
     color: var(--text-muted);
-    font-size: 0.92rem;
-    line-height: 1.65;
+    font-size: 0.88rem;
+    line-height: 1.6;
     max-width: 560px;
   }
 
   .shift-step.step-blue .shift-number { background: var(--accent-blue-soft); color: var(--accent-blue); border: 2px solid rgba(74,144,217,0.3); }
   .shift-step.step-blue .shift-connector { background: linear-gradient(to bottom, var(--accent-blue), var(--accent-green)); }
   .shift-step.step-blue .shift-label { background: var(--accent-blue-soft); color: var(--accent-blue); }
-
   .shift-step.step-green .shift-number { background: var(--accent-green-soft); color: var(--accent-green); border: 2px solid rgba(61,189,125,0.3); }
   .shift-step.step-green .shift-connector { background: linear-gradient(to bottom, var(--accent-green), var(--accent-orange)); }
   .shift-step.step-green .shift-label { background: var(--accent-green-soft); color: var(--accent-green); }
-
   .shift-step.step-orange .shift-number { background: var(--accent-orange-soft); color: var(--accent-orange); border: 2px solid rgba(232,123,53,0.3); }
   .shift-step.step-orange .shift-connector { background: linear-gradient(to bottom, var(--accent-orange), var(--accent-purple)); }
   .shift-step.step-orange .shift-label { background: var(--accent-orange-soft); color: var(--accent-orange); }
-
   .shift-step.step-purple .shift-number { background: var(--accent-purple-soft); color: var(--accent-purple); border: 2px solid rgba(155,109,215,0.3); }
   .shift-step.step-purple .shift-label { background: var(--accent-purple-soft); color: var(--accent-purple); }
 
+  /* ===== META INSIGHTS ===== */
   .meta-insights {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 1.5rem;
-    margin-top: 1rem;
-    padding-top: 2.5rem;
-    border-top: 1px solid var(--border);
   }
-
   .meta-card {
     background: var(--surface);
     border: 1px solid var(--border);
@@ -279,34 +407,22 @@
     height: 2px;
     background: linear-gradient(90deg, var(--accent-orange), var(--accent-purple));
   }
-  .meta-card .meta-icon {
-    font-size: 1.6rem;
-    margin-bottom: 1rem;
-  }
-  .meta-card h4 {
-    font-size: 1.1rem;
-    font-weight: 700;
-    margin-bottom: 0.5rem;
-  }
-  .meta-card p {
-    color: var(--text-muted);
-    font-size: 0.9rem;
-    line-height: 1.6;
-  }
+  .meta-card .meta-icon { font-size: 1.6rem; margin-bottom: 1rem; }
+  .meta-card h4 { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem; }
+  .meta-card p { color: var(--text-muted); font-size: 0.9rem; line-height: 1.6; }
 
-  /* --- Tool Cards --- */
+  /* ===== TOOL CARDS ===== */
   .tools-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.25rem;
   }
   .tool-card {
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    padding: 2rem;
+    padding: 1.75rem;
     transition: all 0.3s ease;
-    cursor: default;
     position: relative;
     overflow: hidden;
   }
@@ -326,43 +442,19 @@
   }
   .tool-card:hover::before { opacity: 1; }
   .tool-icon {
-    width: 48px;
-    height: 48px;
+    width: 44px; height: 44px;
     border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.3rem;
-    margin-bottom: 1.25rem;
-  }
-  .tool-card h3 {
     font-size: 1.2rem;
-    font-weight: 700;
-    margin-bottom: 0.4rem;
+    margin-bottom: 1rem;
   }
-  .tool-card .subtitle {
-    font-size: 0.82rem;
-    color: var(--text-muted);
-    margin-bottom: 0.85rem;
-    font-weight: 500;
-  }
-  .tool-card p {
-    color: var(--text-muted);
-    font-size: 0.88rem;
-    line-height: 1.6;
-    margin-bottom: 1.1rem;
-  }
-  .tool-features {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-  }
-  .feature-tag {
-    font-size: 0.72rem;
-    padding: 4px 10px;
-    border-radius: 6px;
-    font-weight: 500;
-  }
+  .tool-card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.3rem; }
+  .tool-card .subtitle { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.7rem; font-weight: 500; }
+  .tool-card p { color: var(--text-muted); font-size: 0.85rem; line-height: 1.6; margin-bottom: 0.9rem; }
+  .tool-features { display: flex; flex-wrap: wrap; gap: 5px; }
+  .feature-tag { font-size: 0.7rem; padding: 3px 9px; border-radius: 6px; font-weight: 500; }
 
   .card-chat { --card-accent: var(--accent-blue); }
   .card-chat .tool-icon { background: var(--accent-blue-soft); color: var(--accent-blue); }
@@ -377,30 +469,21 @@
   .card-code .tool-icon { background: var(--accent-purple-soft); color: var(--accent-purple); }
   .card-code .feature-tag { background: var(--accent-purple-soft); color: var(--accent-purple); }
 
-  /* --- Comparison Table --- */
+  /* ===== COMPARISON TABLE ===== */
   .comparison-wrapper {
     overflow-x: auto;
     border-radius: var(--radius);
     border: 1px solid var(--border);
-    margin-top: 1rem;
+    margin-top: 1.5rem;
   }
-  .comparison-table {
-    width: 100%;
-    border-collapse: collapse;
-    min-width: 700px;
-  }
+  .comparison-table { width: 100%; border-collapse: collapse; min-width: 650px; }
   .comparison-table th, .comparison-table td {
-    padding: 0.85rem 1.25rem;
+    padding: 0.75rem 1.1rem;
     text-align: left;
     border-bottom: 1px solid var(--border);
-    font-size: 0.88rem;
+    font-size: 0.85rem;
   }
-  .comparison-table th {
-    background: var(--surface);
-    font-weight: 600;
-    color: var(--text);
-    white-space: nowrap;
-  }
+  .comparison-table th { background: var(--surface); font-weight: 600; color: var(--text); white-space: nowrap; }
   .comparison-table th:first-child { border-radius: var(--radius) 0 0 0; }
   .comparison-table th:last-child { border-radius: 0 var(--radius) 0 0; }
   .comparison-table td { color: var(--text-muted); }
@@ -409,794 +492,680 @@
   .check { color: var(--accent-green); font-weight: 600; }
   .cross { color: #444; }
 
-  /* --- Use Cases / Tabs --- */
-  .tabs {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 2rem;
-    flex-wrap: wrap;
-  }
+  /* ===== USE CASES ===== */
+  .tabs { display: flex; gap: 8px; margin-bottom: 1.5rem; flex-wrap: wrap; }
   .tab-btn {
-    padding: 10px 20px;
+    padding: 8px 18px;
     border-radius: 100px;
     border: 1px solid var(--border);
     background: transparent;
     color: var(--text-muted);
     font-family: inherit;
-    font-size: 0.86rem;
+    font-size: 0.84rem;
     font-weight: 500;
     cursor: pointer;
     transition: all 0.2s;
   }
   .tab-btn:hover { background: var(--surface-hover); color: var(--text); }
-  .tab-btn.active {
-    background: var(--accent-orange-soft);
-    border-color: rgba(232,123,53,0.3);
-    color: var(--accent-orange);
-  }
+  .tab-btn.active { background: var(--accent-orange-soft); border-color: rgba(232,123,53,0.3); color: var(--accent-orange); }
 
   .usecase-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 1.25rem;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1rem;
   }
   .usecase-card {
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
-    padding: 1.5rem;
+    padding: 1.3rem;
   }
-  .usecase-card h4 {
-    font-size: 1rem;
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-  }
-  .usecase-card p {
-    color: var(--text-muted);
-    font-size: 0.86rem;
-    line-height: 1.6;
-  }
+  .usecase-card h4 { font-size: 0.95rem; font-weight: 600; margin-bottom: 0.4rem; }
+  .usecase-card p { color: var(--text-muted); font-size: 0.84rem; line-height: 1.6; }
   .usecase-role {
-    font-size: 0.72rem;
+    font-size: 0.7rem;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.06em;
-    margin-bottom: 0.75rem;
+    margin-bottom: 0.65rem;
     display: inline-block;
     padding: 3px 10px;
     border-radius: 6px;
   }
 
-  /* --- Workshop Timeline --- */
-  .timeline {
-    position: relative;
-    padding-left: 3rem;
-  }
+  /* ===== TIMELINE ===== */
+  .timeline { position: relative; padding-left: 3rem; }
   .timeline::before {
     content: '';
     position: absolute;
-    left: 14px;
-    top: 8px;
-    bottom: 8px;
+    left: 14px; top: 8px; bottom: 8px;
     width: 2px;
     background: linear-gradient(to bottom, var(--accent-orange), var(--accent-purple));
     border-radius: 2px;
   }
-  .timeline-item {
-    position: relative;
-    margin-bottom: 2.5rem;
-  }
+  .timeline-item { position: relative; margin-bottom: 2rem; }
   .timeline-item:last-child { margin-bottom: 0; }
   .timeline-dot {
     position: absolute;
-    left: -3rem;
-    top: 4px;
-    width: 30px;
-    height: 30px;
+    left: -3rem; top: 4px;
+    width: 28px; height: 28px;
     border-radius: 50%;
     background: var(--surface);
     border: 2px solid var(--accent-orange);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.7rem;
+    font-size: 0.65rem;
     font-weight: 700;
     color: var(--accent-orange);
     z-index: 1;
   }
-  .timeline-time {
-    font-size: 0.8rem;
-    color: var(--accent-orange);
-    font-weight: 600;
-    margin-bottom: 0.35rem;
-  }
-  .timeline-item h4 {
-    font-size: 1.15rem;
-    font-weight: 700;
-    margin-bottom: 0.5rem;
-  }
-  .timeline-item p {
-    color: var(--text-muted);
-    font-size: 0.9rem;
-    line-height: 1.65;
-  }
+  .timeline-time { font-size: 0.78rem; color: var(--accent-orange); font-weight: 600; margin-bottom: 0.3rem; }
+  .timeline-item h4 { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.4rem; }
+  .timeline-item p { color: var(--text-muted); font-size: 0.88rem; line-height: 1.6; }
 
-  /* --- Challenge Ideas --- */
+  .callout {
+    background: linear-gradient(135deg, rgba(232,123,53,0.06), rgba(155,109,215,0.06));
+    border: 1px solid rgba(232,123,53,0.15);
+    border-radius: var(--radius);
+    padding: 2rem;
+    margin-top: 2rem;
+    text-align: center;
+  }
+  .callout h3 { font-size: 1.2rem; font-weight: 700; margin-bottom: 0.6rem; }
+  .callout p { color: var(--text-muted); font-size: 0.92rem; max-width: 550px; margin: 0 auto; line-height: 1.65; }
+
+  /* ===== CHALLENGES ===== */
   .challenges-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
     gap: 1rem;
-    margin-top: 1.5rem;
   }
   .challenge-card {
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
-    padding: 1.5rem;
+    padding: 1.3rem;
     transition: all 0.2s;
   }
-  .challenge-card:hover {
-    border-color: rgba(232,123,53,0.3);
-    background: var(--surface-hover);
-  }
-  .challenge-emoji {
-    font-size: 1.8rem;
-    margin-bottom: 0.75rem;
-  }
-  .challenge-card h4 {
-    font-size: 1rem;
-    font-weight: 600;
-    margin-bottom: 0.4rem;
-  }
-  .challenge-card p {
-    color: var(--text-muted);
-    font-size: 0.85rem;
-    line-height: 1.55;
-  }
+  .challenge-card:hover { border-color: rgba(232,123,53,0.3); background: var(--surface-hover); }
+  .challenge-emoji { font-size: 1.6rem; margin-bottom: 0.6rem; }
+  .challenge-card h4 { font-size: 0.95rem; font-weight: 600; margin-bottom: 0.35rem; }
+  .challenge-card p { color: var(--text-muted); font-size: 0.82rem; line-height: 1.55; }
 
-  /* --- Callout --- */
-  .callout {
+  /* ===== PREP CARDS ===== */
+  .prep-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.25rem;
+  }
+  .prep-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.75rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .prep-card .bar { position: absolute; top: 0; left: 0; right: 0; height: 3px; }
+  .prep-card h4 { font-size: 1.05rem; font-weight: 700; margin-bottom: 0.85rem; }
+  .prep-card .prep-text { color: var(--text-muted); font-size: 0.85rem; line-height: 1.7; }
+  .prep-card .prep-text p { margin-bottom: 0.6rem; }
+  .prep-card .prep-text strong { color: var(--text); font-weight: 600; }
+
+  .pricing-box {
+    margin-top: 2rem;
     background: linear-gradient(135deg, rgba(232,123,53,0.06), rgba(155,109,215,0.06));
     border: 1px solid rgba(232,123,53,0.15);
     border-radius: var(--radius);
-    padding: 2.5rem;
-    margin-top: 3rem;
-    text-align: center;
+    padding: 1.75rem;
+    overflow-x: auto;
   }
-  .callout h3 {
-    font-size: 1.3rem;
-    font-weight: 700;
-    margin-bottom: 0.75rem;
-  }
-  .callout p {
+  .pricing-box h4 { font-size: 1rem; font-weight: 700; margin-bottom: 1rem; }
+  .pricing-box table { width: 100%; border-collapse: collapse; min-width: 480px; font-size: 0.82rem; }
+  .pricing-box th { text-align: left; padding: 0.5rem 0.8rem; color: var(--text); font-weight: 600; border-bottom: 1px solid var(--border); }
+  .pricing-box td { padding: 0.5rem 0.8rem; color: var(--text-muted); border-bottom: 1px solid var(--border); }
+  .pricing-box tr:last-child td { border-bottom: none; }
+
+  /* ===== KEYBOARD HINT ===== */
+  .kbd-hint {
+    position: fixed;
+    top: 1.5rem;
+    right: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.75rem;
     color: var(--text-muted);
-    font-size: 0.95rem;
-    max-width: 550px;
-    margin: 0 auto;
-    line-height: 1.65;
+    opacity: 0.5;
+    z-index: 100;
+    pointer-events: none;
+  }
+  .kbd {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px 8px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    min-width: 24px;
   }
 
-  /* --- Footer --- */
-  footer {
-    text-align: center;
-    padding: 3rem 2rem;
-    color: var(--text-muted);
-    font-size: 0.85rem;
-    border-top: 1px solid var(--border);
-  }
-
-  .divider {
-    max-width: 1200px;
-    margin: 0 auto;
-    border: none;
-    border-top: 1px solid var(--border);
-  }
-
+  /* ===== RESPONSIVE ===== */
   @media (max-width: 768px) {
-    .section { padding: 3rem 1.25rem; }
+    .slide { padding: 2rem 1.25rem 5rem; }
     .tools-grid { grid-template-columns: 1fr; }
-    .shift-step { grid-template-columns: 50px 1fr; gap: 1rem; }
-    .shift-number { width: 40px; height: 40px; font-size: 0.9rem; }
+    .shift-step { grid-template-columns: 45px 1fr; gap: 1rem; }
+    .shift-number { width: 38px; height: 38px; font-size: 0.85rem; }
     .meta-insights { grid-template-columns: 1fr; }
-    .tabs { gap: 6px; }
-    .tab-btn { padding: 8px 14px; font-size: 0.82rem; }
+    .prep-grid { grid-template-columns: 1fr; }
+    .challenges-grid { grid-template-columns: 1fr 1fr; }
+    .kbd-hint { display: none; }
+    .nav-btn span { display: none; }
+    .nav-btn { padding: 10px 14px; }
   }
 </style>
 </head>
 <body>
 
-<!-- ====== HERO ====== -->
-<section class="hero">
-  <div class="hero-badge">2 timmar &middot; Alla erfarenhetsniv&aring;er</div>
-  <h1>Det h&auml;r handlar inte om <span>verktyg</span></h1>
-  <p>Ett hackathon f&ouml;r att uppt&auml;cka nya s&auml;tt att t&auml;nka med AI. Inte nya knappar att trycka p&aring;.</p>
-  <p class="hero-sub">Du v&auml;ljer sj&auml;lv vad du utforskar och hur djupt du g&aring;r. Det enda som kr&auml;vs &auml;r nyfikenhet.</p>
-  <div class="scroll-hint">
-    <span>Scrolla ner</span>
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
-  </div>
-</section>
+<div class="slide-container">
 
-<hr class="divider">
-
-<!-- ====== TEKNIKVAL ====== -->
-<section class="section" id="teknikval" style="padding-bottom:2rem;">
-  <div style="max-width:750px;">
-    <div style="display:flex;align-items:center;gap:12px;margin-bottom:1.5rem;">
-      <div style="width:4px;height:40px;background:linear-gradient(to bottom,var(--accent-orange),var(--accent-purple));border-radius:2px;flex-shrink:0;"></div>
-      <h2 style="font-size:clamp(1.4rem,3vw,1.8rem);font-weight:700;letter-spacing:-0.02em;">Vi &auml;r inte gifta med n&aring;gon teknik</h2>
-    </div>
-    <p style="color:var(--text-muted);font-size:1rem;line-height:1.75;margin-bottom:1.25rem;">
-      AI-landskapet r&ouml;r sig snabbt. Det som dominerar idag var inte ens relevant f&ouml;r n&aring;gra m&aring;nader sedan, och det som kommer h&auml;rn&auml;st vet ingen s&auml;kert. Vi testar och l&auml;r oss l&auml;ngs med v&auml;gen &mdash; och just nu &auml;r <strong style="color:var(--text);">Claude-sviten en av de klarast lysande stj&auml;rnorna</strong> n&auml;r det g&auml;ller att g&aring; fr&aring;n &rdquo;anv&auml;nda AI&rdquo; till &rdquo;samarbeta med AI.&rdquo;
-    </p>
-    <p style="color:var(--text-muted);font-size:1rem;line-height:1.75;">
-      M&aring;let med det h&auml;r hackathonet &auml;r inte att l&auml;ra sig ett specifikt verktyg. Det &auml;r att uppt&auml;cka ett nytt arbetss&auml;tt &mdash; s&aring; att n&auml;r n&auml;sta verktyg kommer, vet du redan hur du t&auml;nker.
-    </p>
-  </div>
-</section>
-
-<!-- ====== ORDLISTA ====== -->
-<section class="section" id="ordlista" style="padding-top:1rem;">
-  <div class="section-label">Ordlista</div>
-  <h2>Begrepp att k&auml;nna till</h2>
-  <p>Det h&auml;r &auml;r inte en tent &mdash; men dessa ord dyker upp under dagen. H&auml;r &auml;r vad de betyder.</p>
-
-  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem;">
-
-    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:1.4rem;">
-      <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:0.4rem;">
-        <strong style="font-size:1rem;">Prompt</strong>
-        <span style="font-size:0.72rem;color:var(--text-muted);background:rgba(255,255,255,0.05);padding:2px 8px;border-radius:4px;">grundl&auml;ggande</span>
+  <!-- ====== SLIDE 0: HERO ====== -->
+  <div class="slide active" data-slide="0">
+    <div class="slide-inner hero-slide">
+      <div class="hero-badge">2 timmar &middot; Alla erfarenhetsniv&aring;er</div>
+      <h1>Det h&auml;r handlar inte om <span>verktyg</span></h1>
+      <p>Ett hackathon f&ouml;r att uppt&auml;cka nya s&auml;tt att t&auml;nka med AI. Inte nya knappar att trycka p&aring;.</p>
+      <p class="hero-sub">Du v&auml;ljer sj&auml;lv vad du utforskar och hur djupt du g&aring;r. Det enda som kr&auml;vs &auml;r nyfikenhet.</p>
+      <div class="start-hint">
+        Tryck <span class="kbd" style="margin:0 4px;">&rarr;</span> f&ouml;r att b&ouml;rja
       </div>
-      <p style="color:var(--text-muted);font-size:0.85rem;line-height:1.55;">Instruktionen eller fr&aring;gan du ger till AI. Kan vara allt fr&aring;n en mening till en detaljerad brief.</p>
     </div>
-
-    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:1.4rem;">
-      <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:0.4rem;">
-        <strong style="font-size:1rem;">Kontext</strong>
-        <span style="font-size:0.72rem;color:var(--text-muted);background:rgba(255,255,255,0.05);padding:2px 8px;border-radius:4px;">grundl&auml;ggande</span>
-      </div>
-      <p style="color:var(--text-muted);font-size:0.85rem;line-height:1.55;">All information som AI har tillg&aring;ng till i en konversation &mdash; dina meddelanden, uppladdade filer, och eventuella projektdokument. Mer kontext = b&auml;ttre svar.</p>
-    </div>
-
-    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:1.4rem;">
-      <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:0.4rem;">
-        <strong style="font-size:1rem;">Project</strong>
-        <span style="font-size:0.72rem;color:var(--accent-green);background:var(--accent-green-soft);padding:2px 8px;border-radius:4px;">Claude</span>
-      </div>
-      <p style="color:var(--text-muted);font-size:0.85rem;line-height:1.55;">En delad arbetsyta i Claude d&auml;r du laddar upp dokument och skriver instruktioner som Claude alltid har med sig. Som att ge en ny kollega en kunskapsbank f&ouml;r ert omr&aring;de.</p>
-    </div>
-
-    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:1.4rem;">
-      <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:0.4rem;">
-        <strong style="font-size:1rem;">Agent</strong>
-        <span style="font-size:0.72rem;color:var(--accent-orange);background:var(--accent-orange-soft);padding:2px 8px;border-radius:4px;">AI-begrepp</span>
-      </div>
-      <p style="color:var(--text-muted);font-size:0.85rem;line-height:1.55;">En AI som inte bara svarar p&aring; fr&aring;gor utan kan planera, fatta beslut och utf&ouml;ra flera steg autonomt. B&aring;de Cowork och Code anv&auml;nder agentbeteende.</p>
-    </div>
-
-    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:1.4rem;">
-      <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:0.4rem;">
-        <strong style="font-size:1rem;">MCP</strong>
-        <span style="font-size:0.72rem;color:var(--accent-purple);background:var(--accent-purple-soft);padding:2px 8px;border-radius:4px;">tekniskt</span>
-      </div>
-      <p style="color:var(--text-muted);font-size:0.85rem;line-height:1.55;">Model Context Protocol &mdash; en &ouml;ppen standard f&ouml;r att koppla AI till externa verktyg och datakällor som Airtable, Google Drive, Slack med mera. T&auml;nk det som USB-portar f&ouml;r AI.</p>
-    </div>
-
-    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:1.4rem;">
-      <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:0.4rem;">
-        <strong style="font-size:1rem;">Skill</strong>
-        <span style="font-size:0.72rem;color:var(--accent-orange);background:var(--accent-orange-soft);padding:2px 8px;border-radius:4px;">Claude</span>
-      </div>
-      <p style="color:var(--text-muted);font-size:0.85rem;line-height:1.55;">En f&ouml;rbyggd f&ouml;rm&aring;ga i Cowork/Code &mdash; t.ex. att skapa Excel-filer, bygga dashboards, eller analysera data. Claude v&auml;ljer r&auml;tt skill automatiskt baserat p&aring; din brief.</p>
-    </div>
-
-    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:1.4rem;">
-      <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:0.4rem;">
-        <strong style="font-size:1rem;">Artifacts</strong>
-        <span style="font-size:0.72rem;color:var(--accent-blue);background:var(--accent-blue-soft);padding:2px 8px;border-radius:4px;">Claude</span>
-      </div>
-      <p style="color:var(--text-muted);font-size:0.85rem;line-height:1.55;">Interaktiva leverabler som Claude skapar i chatten &mdash; kod, webbsidor, diagram eller dokument som du kan se och anv&auml;nda direkt i konversationen.</p>
-    </div>
-
-    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:1.4rem;">
-      <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:0.4rem;">
-        <strong style="font-size:1rem;">LLM</strong>
-        <span style="font-size:0.72rem;color:var(--text-muted);background:rgba(255,255,255,0.05);padding:2px 8px;border-radius:4px;">AI-begrepp</span>
-      </div>
-      <p style="color:var(--text-muted);font-size:0.85rem;line-height:1.55;">Large Language Model &mdash; den typ av AI-modell som driver Claude, ChatGPT och liknande. Tr&auml;nad p&aring; enorma m&auml;ngder text f&ouml;r att f&ouml;rst&aring; och producera spr&aring;k.</p>
-    </div>
-
-  </div>
-</section>
-
-<hr class="divider">
-
-<!-- ====== PARADIGMSKIFTET ====== -->
-<section class="section" id="mindset">
-  <div class="section-label">01 &mdash; K&auml;rnan</div>
-  <h2>Fyra paradigmskiften</h2>
-  <div class="paradigm-intro">
-    De flesta anv&auml;nder AI som en s&ouml;kmotor med b&auml;ttre svar. Det fungerar &mdash; men det &auml;r som att anv&auml;nda en smartphone bara f&ouml;r att ringa. <strong>Det intressanta h&auml;nder n&auml;r du b&ouml;rjar f&ouml;rh&aring;lla dig annorlunda</strong> &mdash; n&auml;r du slutar st&auml;lla fr&aring;gor och b&ouml;rjar samarbeta.
   </div>
 
-  <div class="shift-journey">
-
-    <!-- Step 1 -->
-    <div class="shift-step step-blue">
-      <div class="shift-line-container">
-        <div class="shift-number">1</div>
-        <div class="shift-connector"></div>
+  <!-- ====== SLIDE 1: TEKNIKVAL ====== -->
+  <div class="slide" data-slide="1">
+    <div class="slide-inner teknikval-content">
+      <div class="bar-title">
+        <div class="bar"></div>
+        <h2>Vi &auml;r inte gifta med n&aring;gon teknik</h2>
       </div>
-      <div class="shift-content">
-        <div class="shift-label">Chat</div>
-        <h3>Fr&aring;n googling till tankepartner</h3>
-        <div class="shift-from-to">
-          <span class="from">St&auml;lla en fr&aring;ga, f&aring; ett svar</span>
-          <span class="arrow">&rarr;</span>
-          T&auml;nka h&ouml;gt tillsammans
+      <p>AI-landskapet r&ouml;r sig snabbt. Det som dominerar idag var inte ens relevant f&ouml;r n&aring;gra m&aring;nader sedan, och det som kommer h&auml;rn&auml;st vet ingen s&auml;kert. Vi testar och l&auml;r oss l&auml;ngs med v&auml;gen &mdash; och just nu &auml;r <strong style="color:var(--text);">Claude-sviten en av de klarast lysande stj&auml;rnorna</strong> n&auml;r det g&auml;ller att g&aring; fr&aring;n &rdquo;anv&auml;nda AI&rdquo; till &rdquo;samarbeta med AI.&rdquo;</p>
+      <p>M&aring;let med det h&auml;r hackathonet &auml;r inte att l&auml;ra sig ett specifikt verktyg. Det &auml;r att uppt&auml;cka ett nytt arbetss&auml;tt &mdash; s&aring; att n&auml;r n&auml;sta verktyg kommer, vet du redan hur du t&auml;nker.</p>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 2: ORDLISTA ====== -->
+  <div class="slide" data-slide="2">
+    <div class="slide-inner">
+      <div class="section-label">Ordlista</div>
+      <h2>Begrepp att k&auml;nna till</h2>
+      <p class="section-desc">Det h&auml;r &auml;r inte en tent &mdash; men dessa ord dyker upp under dagen.</p>
+      <div class="glossary-grid">
+        <div class="glossary-card">
+          <div class="gc-header"><strong>Prompt</strong><span class="gc-tag" style="color:var(--text-muted);background:rgba(255,255,255,0.05);">grundl&auml;ggande</span></div>
+          <p>Instruktionen eller fr&aring;gan du ger till AI. Kan vara allt fr&aring;n en mening till en detaljerad brief.</p>
         </div>
-        <p>De flesta stannar vid fr&aring;ga&ndash;svar. Men redan i chatten kan du skifta: be Claude utmana dina antaganden, st&auml;ll f&ouml;ljdfr&aring;gor p&aring; svaret, be om alternativa perspektiv. Anv&auml;nd AI som en samtalspartner som hj&auml;lper dig t&auml;nka b&auml;ttre &mdash; inte bara svara snabbare.</p>
-      </div>
-    </div>
-
-    <!-- Step 2 -->
-    <div class="shift-step step-green">
-      <div class="shift-line-container">
-        <div class="shift-number">2</div>
-        <div class="shift-connector"></div>
-      </div>
-      <div class="shift-content">
-        <div class="shift-label">Projects</div>
-        <h3>Fr&aring;n repetition till delad f&ouml;rst&aring;else</h3>
-        <div class="shift-from-to">
-          <span class="from">F&ouml;rklara allt varje g&aring;ng</span>
-          <span class="arrow">&rarr;</span>
-          Bygga gemensam kontext
+        <div class="glossary-card">
+          <div class="gc-header"><strong>Kontext</strong><span class="gc-tag" style="color:var(--text-muted);background:rgba(255,255,255,0.05);">grundl&auml;ggande</span></div>
+          <p>All information som AI har tillg&aring;ng till. Dina meddelanden, filer, och projektdokument. Mer kontext = b&auml;ttre svar.</p>
         </div>
-        <p>Ist&auml;llet f&ouml;r att b&ouml;rja fr&aring;n noll i varje konversation, ger du Claude ert sortiment, era riktlinjer, er data. Nu f&ouml;rst&aring;r Claude er v&auml;rld &mdash; och svaren blir dramatiskt b&auml;ttre. Det &auml;r skillnaden mellan att prata med en fr&auml;mling och en kollega.</p>
-      </div>
-    </div>
-
-    <!-- Step 3 -->
-    <div class="shift-step step-orange">
-      <div class="shift-line-container">
-        <div class="shift-number">3</div>
-        <div class="shift-connector"></div>
-      </div>
-      <div class="shift-content">
-        <div class="shift-label">Cowork</div>
-        <h3>Fr&aring;n fr&aring;gor till delegering</h3>
-        <div class="shift-from-to">
-          <span class="from">&rdquo;Vad tycker du om denna data?&rdquo;</span>
-          <span class="arrow">&rarr;</span>
-          &rdquo;Analysera datan och skapa en rapport.&rdquo;
+        <div class="glossary-card">
+          <div class="gc-header"><strong>Project</strong><span class="gc-tag" style="color:var(--accent-green);background:var(--accent-green-soft);">Claude</span></div>
+          <p>En delad arbetsyta med dokument och instruktioner som Claude alltid har med sig. Som en kunskapsbank f&ouml;r ert omr&aring;de.</p>
         </div>
-        <p>H&auml;r h&auml;nder det stora skiftet. Du slutar anv&auml;nda AI som ett verktyg och b&ouml;rjar briefa det som en medarbetare. Du beskriver &ouml;nskat resultat &mdash; Claude planerar stegen, exekverar dem autonomt, producerar leverabler, och st&auml;mmer av med dig n&auml;r det beh&ouml;vs. Det &auml;r som att delegera en komplex uppgift till en kollega: du s&auml;ger vart ni ska, inte hur ni tar er dit. Claude s&ouml;ker p&aring; webben, analyserar filer, skriver kod i bakgrunden, och levererar f&auml;rdiga dashboards, rapporter och presentationer.</p>
-      </div>
-    </div>
-
-    <!-- Step 4 -->
-    <div class="shift-step step-purple">
-      <div class="shift-line-container">
-        <div class="shift-number">4</div>
-      </div>
-      <div class="shift-content">
-        <div class="shift-label">Code</div>
-        <h3>Fr&aring;n uppgifter till system</h3>
-        <div class="shift-from-to">
-          <span class="from">L&ouml;sa en sak i taget</span>
-          <span class="arrow">&rarr;</span>
-          Bygga n&aring;got som forts&auml;tter arbeta
+        <div class="glossary-card">
+          <div class="gc-header"><strong>Agent</strong><span class="gc-tag" style="color:var(--accent-orange);background:var(--accent-orange-soft);">AI-begrepp</span></div>
+          <p>En AI som kan planera, fatta beslut och utf&ouml;ra flera steg autonomt. B&aring;de Cowork och Code anv&auml;nder agentbeteende.</p>
         </div>
-        <p>Code tar den autonoma f&ouml;rm&aring;gan ett steg l&auml;ngre. Precis som Cowork planerar och exekverar Code komplexa uppgifter sj&auml;lvst&auml;ndigt &mdash; men h&auml;r bygger du n&aring;got som forts&auml;tter arbeta efter att du st&auml;ngt laptopen. En agent som dagligen bevakar konkurrenter, en pipeline som transformerar data, ett gr&auml;nssnitt som hela teamet kan anv&auml;nda. Du v&auml;ver in AI i hela tankeprocessen: fr&aring;n &rdquo;hj&auml;lp mig med detta&rdquo; till &rdquo;bygg n&aring;got som g&ouml;r detta &aring;t oss, varje dag.&rdquo;</p>
+        <div class="glossary-card">
+          <div class="gc-header"><strong>MCP</strong><span class="gc-tag" style="color:var(--accent-purple);background:var(--accent-purple-soft);">tekniskt</span></div>
+          <p>Model Context Protocol &mdash; en &ouml;ppen standard f&ouml;r att koppla AI till externa verktyg. T&auml;nk USB-portar f&ouml;r AI.</p>
+        </div>
+        <div class="glossary-card">
+          <div class="gc-header"><strong>Skill</strong><span class="gc-tag" style="color:var(--accent-orange);background:var(--accent-orange-soft);">Claude</span></div>
+          <p>En f&ouml;rbyggd f&ouml;rm&aring;ga i Cowork/Code &mdash; t.ex. skapa Excel, bygga dashboards, eller analysera data.</p>
+        </div>
+        <div class="glossary-card">
+          <div class="gc-header"><strong>Artifacts</strong><span class="gc-tag" style="color:var(--accent-blue);background:var(--accent-blue-soft);">Claude</span></div>
+          <p>Interaktiva leverabler i chatten &mdash; kod, webbsidor, diagram eller dokument du kan anv&auml;nda direkt.</p>
+        </div>
+        <div class="glossary-card">
+          <div class="gc-header"><strong>LLM</strong><span class="gc-tag" style="color:var(--text-muted);background:rgba(255,255,255,0.05);">AI-begrepp</span></div>
+          <p>Large Language Model &mdash; den typ av AI-modell som driver Claude, ChatGPT och liknande.</p>
+        </div>
       </div>
     </div>
-
   </div>
 
-  <!-- Meta insights -->
-  <div class="meta-insights">
-    <div class="meta-card">
-      <div class="meta-icon">&circlearrowright;</div>
-      <h4>Iteration &ouml;ver perfektion</h4>
-      <p>Din f&ouml;rsta prompt beh&ouml;ver inte vara perfekt. Starta messy, iterera, f&ouml;rfina. AI bel&ouml;nar &rdquo;good enough&rdquo; som startpunkt &mdash; magin ligger i dialogen som f&ouml;ljer.</p>
-    </div>
-    <div class="meta-card">
-      <div class="meta-icon">&uarr;</div>
-      <h4>Metal&auml;rande</h4>
-      <p>Den viktigaste f&auml;rdigheten &auml;r inte att promptra &mdash; det &auml;r att l&auml;ra sig l&auml;ra med AI. St&auml;ll f&ouml;ljdfr&aring;gor. Ifr&aring;gas&auml;tt svaren. Be om f&ouml;rdjupning. Varje interaktion l&auml;r dig vad AI kan och hur du anv&auml;nder det b&auml;ttre.</p>
-    </div>
-  </div>
-
-</section>
-
-<hr class="divider">
-
-<!-- ====== VERKTYG ====== -->
-<section class="section" id="verktyg">
-  <div class="section-label">02 &mdash; Verktygsl&aring;dan</div>
-  <h2>Fyra s&auml;tt att jobba med Claude</h2>
-  <p>V&auml;lj det som k&auml;nns r&auml;tt f&ouml;r dig. Det finns inget &rdquo;r&auml;tt&rdquo; verktyg &mdash; bara olika s&auml;tt att utforska samma paradigmskifte.</p>
-
-  <div class="tools-grid">
-
-    <div class="tool-card card-chat">
-      <div class="tool-icon">&nbsp;&#128172;</div>
-      <h3>Chat</h3>
-      <div class="subtitle">Alla kan starta direkt</div>
-      <p>Konversera, ladda upp filer, s&ouml;k p&aring; webben, analysera data. Den enklaste ing&aring;ngen &mdash; och redan h&auml;r kan du b&ouml;rja t&auml;nka annorlunda.</p>
-      <div class="tool-features">
-        <span class="feature-tag">Filuppladdning</span>
-        <span class="feature-tag">Webbs&ouml;kning</span>
-        <span class="feature-tag">Analys</span>
-        <span class="feature-tag">Skrivande</span>
+  <!-- ====== SLIDE 3: PARADIGMSKIFTEN (1 & 2) ====== -->
+  <div class="slide" data-slide="3">
+    <div class="slide-inner">
+      <div class="section-label">01 &mdash; K&auml;rnan</div>
+      <h2>Fyra paradigmskiften</h2>
+      <div class="paradigm-intro">
+        De flesta anv&auml;nder AI som en s&ouml;kmotor med b&auml;ttre svar. <strong>Det intressanta h&auml;nder n&auml;r du b&ouml;rjar f&ouml;rh&aring;lla dig annorlunda</strong> &mdash; n&auml;r du slutar st&auml;lla fr&aring;gor och b&ouml;rjar samarbeta.
+      </div>
+      <div class="shift-journey">
+        <div class="shift-step step-blue">
+          <div class="shift-line-container">
+            <div class="shift-number">1</div>
+            <div class="shift-connector"></div>
+          </div>
+          <div class="shift-content">
+            <div class="shift-label">Chat</div>
+            <h3>Fr&aring;n googling till tankepartner</h3>
+            <div class="shift-from-to"><span class="from">St&auml;lla en fr&aring;ga, f&aring; ett svar</span><span class="arrow">&rarr;</span>T&auml;nka h&ouml;gt tillsammans</div>
+            <p>De flesta stannar vid fr&aring;ga&ndash;svar. Men redan i chatten kan du skifta: be Claude utmana dina antaganden, st&auml;ll f&ouml;ljdfr&aring;gor, be om alternativa perspektiv. Anv&auml;nd AI som en samtalspartner som hj&auml;lper dig t&auml;nka b&auml;ttre.</p>
+          </div>
+        </div>
+        <div class="shift-step step-green">
+          <div class="shift-line-container">
+            <div class="shift-number">2</div>
+          </div>
+          <div class="shift-content">
+            <div class="shift-label">Projects</div>
+            <h3>Fr&aring;n repetition till delad f&ouml;rst&aring;else</h3>
+            <div class="shift-from-to"><span class="from">F&ouml;rklara allt varje g&aring;ng</span><span class="arrow">&rarr;</span>Bygga gemensam kontext</div>
+            <p>Ist&auml;llet f&ouml;r att b&ouml;rja fr&aring;n noll varje g&aring;ng, ger du Claude ert sortiment, era riktlinjer, er data. Nu f&ouml;rst&aring;r Claude er v&auml;rld &mdash; och svaren blir dramatiskt b&auml;ttre.</p>
+          </div>
+        </div>
       </div>
     </div>
+  </div>
 
-    <div class="tool-card card-projects">
-      <div class="tool-icon">&nbsp;&#128193;</div>
-      <h3>Projects</h3>
-      <div class="subtitle">Delad kontext i teamet</div>
-      <p>Skapa en persistent kunskapsbas med dokument och instruktioner. Ge Claude djup f&ouml;rst&aring;else f&ouml;r ert sortiment, varum&auml;rke eller processer.</p>
-      <div class="tool-features">
-        <span class="feature-tag">Kunskapsbas</span>
-        <span class="feature-tag">Teamdelning</span>
-        <span class="feature-tag">Instruktioner</span>
-        <span class="feature-tag">Kontext</span>
+  <!-- ====== SLIDE 4: PARADIGMSKIFTEN (3 & 4) ====== -->
+  <div class="slide" data-slide="4">
+    <div class="slide-inner">
+      <div class="section-label">01 &mdash; K&auml;rnan (forts.)</div>
+      <div class="shift-journey">
+        <div class="shift-step step-orange">
+          <div class="shift-line-container">
+            <div class="shift-number">3</div>
+            <div class="shift-connector"></div>
+          </div>
+          <div class="shift-content">
+            <div class="shift-label">Cowork</div>
+            <h3>Fr&aring;n fr&aring;gor till delegering</h3>
+            <div class="shift-from-to"><span class="from">&rdquo;Vad tycker du om denna data?&rdquo;</span><span class="arrow">&rarr;</span>&rdquo;Analysera datan och skapa en rapport.&rdquo;</div>
+            <p>H&auml;r h&auml;nder det stora skiftet. Du slutar anv&auml;nda AI som ett verktyg och b&ouml;rjar briefa det som en medarbetare. Du beskriver &ouml;nskat resultat &mdash; Claude planerar stegen, exekverar dem autonomt, producerar leverabler, och st&auml;mmer av med dig n&auml;r det beh&ouml;vs. Det &auml;r som att delegera en komplex uppgift till en kollega.</p>
+          </div>
+        </div>
+        <div class="shift-step step-purple">
+          <div class="shift-line-container">
+            <div class="shift-number">4</div>
+          </div>
+          <div class="shift-content">
+            <div class="shift-label">Code</div>
+            <h3>Fr&aring;n uppgifter till system</h3>
+            <div class="shift-from-to"><span class="from">L&ouml;sa en sak i taget</span><span class="arrow">&rarr;</span>Bygga n&aring;got som forts&auml;tter arbeta</div>
+            <p>Code tar den autonoma f&ouml;rm&aring;gan ett steg l&auml;ngre. Precis som Cowork planerar och exekverar Code komplexa uppgifter sj&auml;lvst&auml;ndigt &mdash; men h&auml;r bygger du n&aring;got som forts&auml;tter arbeta efter att du st&auml;ngt laptopen. Du v&auml;ver in AI i hela tankeprocessen: fr&aring;n &rdquo;hj&auml;lp mig med detta&rdquo; till &rdquo;bygg n&aring;got som g&ouml;r detta &aring;t oss, varje dag.&rdquo;</p>
+          </div>
+        </div>
       </div>
     </div>
+  </div>
 
-    <div class="tool-card card-cowork">
-      <div class="tool-icon">&nbsp;&#128421;&#65039;</div>
-      <h3>Cowork</h3>
-      <div class="subtitle">Digital medarbetare</div>
-      <p>Claude som autonom medarbetare. Skapar riktiga filer (Excel, PowerPoint, Word), k&ouml;r kod, styr webbl&auml;sare och producerar f&auml;rdiga leverabler.</p>
-      <div class="tool-features">
-        <span class="feature-tag">Filskapande</span>
-        <span class="feature-tag">Integrationer</span>
-        <span class="feature-tag">Dashboards</span>
-        <span class="feature-tag">Automation</span>
+  <!-- ====== SLIDE 5: META-INSIKTER ====== -->
+  <div class="slide" data-slide="5">
+    <div class="slide-inner">
+      <div class="section-label">01 &mdash; Tv&auml;rg&aring;ende insikter</div>
+      <h2>Det som g&auml;ller oavsett verktyg</h2>
+      <p class="section-desc">Tv&aring; principer som g&ouml;r dig b&auml;ttre med alla AI-verktyg.</p>
+      <div class="meta-insights">
+        <div class="meta-card">
+          <div class="meta-icon">&#8634;</div>
+          <h4>Iteration &ouml;ver perfektion</h4>
+          <p>Din f&ouml;rsta prompt beh&ouml;ver inte vara perfekt. Starta messy, iterera, f&ouml;rfina. AI bel&ouml;nar &rdquo;good enough&rdquo; som startpunkt &mdash; magin ligger i dialogen som f&ouml;ljer.</p>
+        </div>
+        <div class="meta-card">
+          <div class="meta-icon">&uarr;</div>
+          <h4>Metal&auml;rande</h4>
+          <p>Den viktigaste f&auml;rdigheten &auml;r inte att promptra &mdash; det &auml;r att l&auml;ra sig l&auml;ra med AI. St&auml;ll f&ouml;ljdfr&aring;gor. Ifr&aring;gas&auml;tt svaren. Be om f&ouml;rdjupning. Varje interaktion l&auml;r dig vad AI kan och hur du anv&auml;nder det b&auml;ttre.</p>
+        </div>
       </div>
     </div>
+  </div>
 
-    <div class="tool-card card-code">
-      <div class="tool-icon">&nbsp;&#9000;&#65039;</div>
-      <h3>Code</h3>
-      <div class="subtitle">F&ouml;r den som vill bygga</div>
-      <p>CLI-verktyg i terminalen. Skriver kod, bygger applikationer, skapar agenter och automation. Kraftfullt f&ouml;r den som vill g&aring; p&aring; djupet.</p>
-      <div class="tool-features">
-        <span class="feature-tag">Kodgenerering</span>
-        <span class="feature-tag">Agenter</span>
-        <span class="feature-tag">API:er</span>
-        <span class="feature-tag">Git</span>
+  <!-- ====== SLIDE 6: VERKTYG ====== -->
+  <div class="slide" data-slide="6">
+    <div class="slide-inner">
+      <div class="section-label">02 &mdash; Verktygsl&aring;dan</div>
+      <h2>Fyra s&auml;tt att jobba med Claude</h2>
+      <p class="section-desc">V&auml;lj det som k&auml;nns r&auml;tt f&ouml;r dig. Det finns inget &rdquo;r&auml;tt&rdquo; verktyg.</p>
+      <div class="tools-grid">
+        <div class="tool-card card-chat">
+          <div class="tool-icon">&#128172;</div>
+          <h3>Chat</h3>
+          <div class="subtitle">Alla kan starta direkt</div>
+          <p>Konversera, ladda upp filer, s&ouml;k p&aring; webben, analysera data. Den enklaste ing&aring;ngen.</p>
+          <div class="tool-features"><span class="feature-tag">Filuppladdning</span><span class="feature-tag">Webbs&ouml;kning</span><span class="feature-tag">Analys</span><span class="feature-tag">Skrivande</span></div>
+        </div>
+        <div class="tool-card card-projects">
+          <div class="tool-icon">&#128193;</div>
+          <h3>Projects</h3>
+          <div class="subtitle">Delad kontext i teamet</div>
+          <p>Skapa en persistent kunskapsbas med dokument och instruktioner. Djup f&ouml;rst&aring;else f&ouml;r ert omr&aring;de.</p>
+          <div class="tool-features"><span class="feature-tag">Kunskapsbas</span><span class="feature-tag">Teamdelning</span><span class="feature-tag">Instruktioner</span><span class="feature-tag">Kontext</span></div>
+        </div>
+        <div class="tool-card card-cowork">
+          <div class="tool-icon">&#128421;&#65039;</div>
+          <h3>Cowork</h3>
+          <div class="subtitle">Digital medarbetare</div>
+          <p>Claude som autonom medarbetare. Skapar filer, k&ouml;r kod, styr webbl&auml;sare och producerar leverabler.</p>
+          <div class="tool-features"><span class="feature-tag">Filskapande</span><span class="feature-tag">Integrationer</span><span class="feature-tag">Dashboards</span><span class="feature-tag">Automation</span></div>
+        </div>
+        <div class="tool-card card-code">
+          <div class="tool-icon">&#9000;&#65039;</div>
+          <h3>Code</h3>
+          <div class="subtitle">F&ouml;r den som vill bygga</div>
+          <p>CLI-verktyg i terminalen. Bygger applikationer, agenter och automation.</p>
+          <div class="tool-features"><span class="feature-tag">Kodgenerering</span><span class="feature-tag">Agenter</span><span class="feature-tag">API:er</span><span class="feature-tag">Git</span></div>
+        </div>
       </div>
     </div>
-
   </div>
 
-  <!-- Comparison Table -->
-  <div class="comparison-wrapper" style="margin-top:3rem;">
-    <table class="comparison-table">
-      <thead>
-        <tr>
-          <th>Kapabilitet</th>
-          <th>Chat</th>
-          <th>Projects</th>
-          <th>Cowork</th>
-          <th>Code</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr><td>Konversation &amp; fr&aring;gor</td><td class="check">&check;</td><td class="check">&check;</td><td class="check">&check;</td><td class="check">&check;</td></tr>
-        <tr><td>Filuppladdning &amp; analys</td><td class="check">&check;</td><td class="check">&check;</td><td class="check">&check;</td><td class="check">&check;</td></tr>
-        <tr><td>Webbs&ouml;kning</td><td class="check">&check;</td><td class="check">&check;</td><td class="check">&check;</td><td class="check">&check;</td></tr>
-        <tr><td>Delad kunskapsbas</td><td class="cross">&mdash;</td><td class="check">&check;</td><td class="cross">&mdash;</td><td class="cross">&mdash;</td></tr>
-        <tr><td>Skapa Office-filer (xlsx, pptx, docx)</td><td class="cross">&mdash;</td><td class="cross">&mdash;</td><td class="check">&check;</td><td class="check">&check;</td></tr>
-        <tr><td>Interaktiva dashboards</td><td class="cross">&mdash;</td><td class="cross">&mdash;</td><td class="check">&check;</td><td class="check">&check;</td></tr>
-        <tr><td>Webbl&auml;sarautomation</td><td class="cross">&mdash;</td><td class="cross">&mdash;</td><td class="check">&check;</td><td class="cross">&mdash;</td></tr>
-        <tr><td>Externa integrationer (MCP)</td><td class="cross">&mdash;</td><td class="cross">&mdash;</td><td class="check">&check;</td><td class="check">&check;</td></tr>
-        <tr><td>K&ouml;ra &amp; testa kod</td><td class="cross">&mdash;</td><td class="cross">&mdash;</td><td class="check">&check;</td><td class="check">&check;</td></tr>
-        <tr><td>Bygga agenter &amp; automatisering</td><td class="cross">&mdash;</td><td class="cross">&mdash;</td><td class="cross">&mdash;</td><td class="check">&check;</td></tr>
-        <tr>
-          <td style="font-weight:600">Mindset-skifte</td>
-          <td style="color:var(--accent-blue);font-size:0.82rem">Tankepartner</td>
-          <td style="color:var(--accent-green);font-size:0.82rem">Delad kontext</td>
-          <td style="color:var(--accent-orange);font-size:0.82rem">Delegering</td>
-          <td style="color:var(--accent-purple);font-size:0.82rem">Systembygge</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</section>
-
-<hr class="divider">
-
-<!-- ====== USE CASES ====== -->
-<section class="section" id="anvandning">
-  <div class="section-label">03 &mdash; Retailanv&auml;ndning</div>
-  <h2>Vad kan du l&ouml;sa?</h2>
-  <p>Konkreta exempel p&aring; hur olika roller kan anv&auml;nda verktygen f&ouml;r att l&ouml;sa verkliga problem.</p>
-
-  <div class="tabs">
-    <button class="tab-btn active" onclick="showTab('all')">Alla</button>
-    <button class="tab-btn" onclick="showTab('chat')">Chat &amp; Projects</button>
-    <button class="tab-btn" onclick="showTab('cowork')">Cowork</button>
-    <button class="tab-btn" onclick="showTab('code')">Code</button>
-  </div>
-
-  <div class="usecase-grid">
-
-    <div class="usecase-card" data-tool="chat">
-      <div class="usecase-role" style="background:var(--accent-blue-soft);color:var(--accent-blue);">Chat / Projects</div>
-      <h4>Leverant&ouml;rsanalys</h4>
-      <p>Ladda upp leverant&ouml;rsavtal och be Claude j&auml;mf&ouml;ra villkor, identifiera f&ouml;rhandlingsutrymme och sammanfatta skillnader.</p>
-    </div>
-
-    <div class="usecase-card" data-tool="chat">
-      <div class="usecase-role" style="background:var(--accent-blue-soft);color:var(--accent-blue);">Chat / Projects</div>
-      <h4>Kampanjtexter</h4>
-      <p>Skapa och iterera p&aring; kampanjtexter, produktbeskrivningar och s&auml;songskommunikation. Projects h&aring;ller tonalitet och varum&auml;rkesguide.</p>
-    </div>
-
-    <div class="usecase-card" data-tool="chat">
-      <div class="usecase-role" style="background:var(--accent-green-soft);color:var(--accent-green);">Projects</div>
-      <h4>Intern kunskapsbas</h4>
-      <p>Bygg ett Project med produktinfo, FAQ:er och returpolicys som teamet kan fr&aring;ga mot i realtid.</p>
-    </div>
-
-    <div class="usecase-card" data-tool="cowork">
-      <div class="usecase-role" style="background:var(--accent-orange-soft);color:var(--accent-orange);">Cowork</div>
-      <h4>F&ouml;rs&auml;ljningsdashboard</h4>
-      <p>Peka Cowork mot f&ouml;rs&auml;ljningsdata och f&aring; interaktiva dashboards, Excel-rapporter eller presentationer &mdash; utan att skriva en rad kod.</p>
-    </div>
-
-    <div class="usecase-card" data-tool="cowork">
-      <div class="usecase-role" style="background:var(--accent-orange-soft);color:var(--accent-orange);">Cowork</div>
-      <h4>Omv&auml;rldsbevakning</h4>
-      <p>L&aring;t Claude s&ouml;ka webben efter konkurrentpriser, lanseringar och trender &mdash; sammanst&auml;llt som Word-dokument eller presentation.</p>
-    </div>
-
-    <div class="usecase-card" data-tool="cowork">
-      <div class="usecase-role" style="background:var(--accent-orange-soft);color:var(--accent-orange);">Cowork</div>
-      <h4>Lageranalys</h4>
-      <p>Koppla datakällor och l&aring;t Claude analysera lagerniv&aring;er, identifiera &ouml;verstock och skapa beslutsunderlag som Excel-fil.</p>
-    </div>
-
-    <div class="usecase-card" data-tool="code">
-      <div class="usecase-role" style="background:var(--accent-purple-soft);color:var(--accent-purple);">Code</div>
-      <h4>Automatisk trendagent</h4>
-      <p>Bygg en agent som h&auml;mtar data fr&aring;n API:et, analyserar f&ouml;rs&auml;ljningstrender och genererar en sammanfattning.</p>
-    </div>
-
-    <div class="usecase-card" data-tool="code">
-      <div class="usecase-role" style="background:var(--accent-purple-soft);color:var(--accent-purple);">Code</div>
-      <h4>Sortimentschatbot</h4>
-      <p>Bygg en intern chatbot kopplad mot produktdatabasen som svarar p&aring; fr&aring;gor som &rdquo;vilka produkter har h&ouml;gst marginal i kategori X?&rdquo;</p>
-    </div>
-
-    <div class="usecase-card" data-tool="code">
-      <div class="usecase-role" style="background:var(--accent-purple-soft);color:var(--accent-purple);">Code</div>
-      <h4>Datapipeline</h4>
-      <p>Bygg en pipeline som automatiskt transformerar r&aring;data till insikter &mdash; med tester och felhantering.</p>
-    </div>
-
-  </div>
-</section>
-
-<hr class="divider">
-
-<!-- ====== WORKSHOP ====== -->
-<section class="section" id="workshop">
-  <div class="section-label">04 &mdash; Upplägg</div>
-  <h2>2 timmar. Fritt utforskande.</h2>
-  <p>Kort intro, sedan utforskar du sj&auml;lv &mdash; med handledare i rummet som hj&auml;lper dig komma ig&aring;ng och g&aring; vidare.</p>
-
-  <div class="timeline">
-
-    <div class="timeline-item">
-      <div class="timeline-dot">1</div>
-      <div class="timeline-time">0:00 &mdash; 0:15 (15 min)</div>
-      <h4>Kick-off &amp; mindset</h4>
-      <p>Kort intro om paradigmskiftena: varf&ouml;r vi &auml;r h&auml;r, vad som &auml;r m&ouml;jligt, och vad som skiljer &rdquo;anv&auml;nda AI&rdquo; fr&aring;n &rdquo;samarbeta med AI&rdquo;. Snabb demo av ett och samma problem l&ouml;st i Chat vs. Cowork f&ouml;r att visa skillnaden i arbetss&auml;tt. &Ouml;versikt av mock-databasen och tillg&auml;ngliga verktyg.</p>
-    </div>
-
-    <div class="timeline-item">
-      <div class="timeline-dot">2</div>
-      <div class="timeline-time">0:15 &mdash; 1:40 (85 min)</div>
-      <h4>Utforska &amp; experimentera</h4>
-      <p>V&auml;lj ett verktyg som k&auml;nns r&auml;tt f&ouml;r dig. Jobba ensam eller i par. Utg&aring; fr&aring;n ett problem du k&auml;nner igen fr&aring;n vardagen, eller v&auml;lj en av de f&ouml;reslagna utmaningarna nedan. Handledare cirkulerar f&ouml;r att hj&auml;lpa dig komma ig&aring;ng, f&ouml;resl&aring; n&auml;sta steg, och visa vad som &auml;r m&ouml;jligt. Byt g&auml;rna verktyg under v&auml;gen &mdash; det &auml;r ingen t&auml;vling, det &auml;r en uppt&auml;cktsresa.</p>
-    </div>
-
-    <div class="timeline-item">
-      <div class="timeline-dot">3</div>
-      <div class="timeline-time">1:40 &mdash; 2:00 (20 min)</div>
-      <h4>Show &amp; tell</h4>
-      <p>Kort runda d&auml;r den som vill visar vad de hittade, byggt eller blivit &ouml;verraskade av. Det mest v&auml;rdefulla &auml;r ofta insikterna, inte leverablerna. Avsluta med: vad tar du med dig? Vad vill du testa im&ouml;ron?</p>
-    </div>
-
-  </div>
-
-  <div class="callout">
-    <h3>Det finns inget &rdquo;r&auml;tt&rdquo; s&auml;tt</h3>
-    <p>Du beh&ouml;ver inte kunna koda. Du beh&ouml;ver inte ha en plan. Det enda vi ber dig om &auml;r att prova n&aring;got du inte gjort f&ouml;rut &mdash; och se vad som h&auml;nder.</p>
-  </div>
-
-</section>
-
-<!-- ====== CHALLENGES ====== -->
-<section class="section" id="utmaningar">
-  <div class="section-label">05 &mdash; Inspiration</div>
-  <h2>Beh&ouml;ver du en startpunkt?</h2>
-  <p>V&auml;lj en av dessa retailfokuserade utmaningar, eller ta med ett eget problem fr&aring;n din vardag.</p>
-
-  <div class="challenges-grid">
-    <div class="challenge-card">
-      <div class="challenge-emoji">&#128269;</div>
-      <h4>Omv&auml;rldsbevakning</h4>
-      <p>Samla in och sammanfatta nyheter, prisf&ouml;r&auml;ndringar och trender fr&aring;n konkurrenter.</p>
-    </div>
-    <div class="challenge-card">
-      <div class="challenge-emoji">&#128202;</div>
-      <h4>F&ouml;rs&auml;ljningsanalys</h4>
-      <p>Hitta anomalier, trender och insikter i mock-datan &mdash; presentera som dashboard eller rapport.</p>
-    </div>
-    <div class="challenge-card">
-      <div class="challenge-emoji">&#129302;</div>
-      <h4>Intern chatbot</h4>
-      <p>Skapa en kunskapsbas som svarar p&aring; fr&aring;gor om sortiment, lagerniv&aring;er eller kundrecensioner.</p>
-    </div>
-    <div class="challenge-card">
-      <div class="challenge-emoji">&#128230;</div>
-      <h4>Lageroptimering</h4>
-      <p>Analysera lager och efterfr&aring;gem&ouml;nster f&ouml;r att hitta &ouml;verstock, understock och optimala best&auml;llningspunkter.</p>
-    </div>
-    <div class="challenge-card">
-      <div class="challenge-emoji">&#9997;&#65039;</div>
-      <h4>Kampanjgenerering</h4>
-      <p>Skapa personaliserade kampanjtexter f&ouml;r olika kundsegment baserat p&aring; k&ouml;phistorik.</p>
-    </div>
-    <div class="challenge-card">
-      <div class="challenge-emoji">&#128200;</div>
-      <h4>Priss&auml;ttningsanalys</h4>
-      <p>J&auml;mf&ouml;r era priser mot konkurrenters och ta fram rekommendationer f&ouml;r justeringar.</p>
-    </div>
-  </div>
-</section>
-
-<hr class="divider">
-
-<!-- ====== FÖRBEREDELSER ====== -->
-<section class="section" id="forberedelser">
-  <div class="section-label">06 &mdash; F&ouml;rberedelser</div>
-  <h2>Vad beh&ouml;ver vi g&ouml;ra innan?</h2>
-  <p>Praktisk checklista f&ouml;r att allt ska rulla fr&aring;n minut ett.</p>
-
-  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:1.5rem;">
-
-    <!-- Konton & licenser -->
-    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:2rem;position:relative;overflow:hidden;">
-      <div style="position:absolute;top:0;left:0;right:0;height:3px;background:var(--accent-orange);"></div>
-      <h4 style="font-size:1.1rem;font-weight:700;margin-bottom:1rem;">&#127919; Konton &amp; licenser</h4>
-      <div style="color:var(--text-muted);font-size:0.88rem;line-height:1.7;">
-        <p style="margin-bottom:0.75rem;"><strong style="color:var(--text);">Minimum: Pro-plan ($20/m&aring;n per person)</strong><br>
-        Ger tillg&aring;ng till Chat, Projects, Cowork och Code. Anv&auml;ndningen &auml;r delad mellan alla verktyg med en 5-timmarscykel som &aring;terst&auml;lls. F&ouml;r en 2h-workshop r&auml;cker Pro f&ouml;r de flesta.</p>
-        <p style="margin-bottom:0.75rem;"><strong style="color:var(--text);">Rekommenderat f&ouml;r Code-sp&aring;ret: Max-plan ($100/m&aring;n)</strong><br>
-        5x mer anv&auml;ndning &auml;n Pro. Om n&aring;gra deltagare vill bygga intensivt med Code kan de annars sl&aring; i taket p&aring; Pro.</p>
-        <p style="margin-bottom:0.75rem;"><strong style="color:var(--text);">Alternativ f&ouml;r team: Team-plan ($25/m&aring;n per person)</strong><br>
-        Ger admin-kontroll &ouml;ver alla konton, gemensam fakturering, och enklare onboarding. Bra om ni vill ha kontroll &ouml;ver 10+ deltagare.</p>
-        <p><strong style="color:var(--text);">Tips:</strong> Skapa konton i f&ouml;rv&auml;g och verifiera att alla kan logga in. Skicka inloggningsuppgifter dagen innan.</p>
+  <!-- ====== SLIDE 7: JÄMFÖRELSETABELL ====== -->
+  <div class="slide" data-slide="7">
+    <div class="slide-inner">
+      <div class="section-label">02 &mdash; J&auml;mf&ouml;relse</div>
+      <h2>Vad kan vad?</h2>
+      <div class="comparison-wrapper">
+        <table class="comparison-table">
+          <thead>
+            <tr><th>Kapabilitet</th><th>Chat</th><th>Projects</th><th>Cowork</th><th>Code</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Konversation &amp; fr&aring;gor</td><td class="check">&check;</td><td class="check">&check;</td><td class="check">&check;</td><td class="check">&check;</td></tr>
+            <tr><td>Filuppladdning &amp; analys</td><td class="check">&check;</td><td class="check">&check;</td><td class="check">&check;</td><td class="check">&check;</td></tr>
+            <tr><td>Webbs&ouml;kning</td><td class="check">&check;</td><td class="check">&check;</td><td class="check">&check;</td><td class="check">&check;</td></tr>
+            <tr><td>Delad kunskapsbas</td><td class="cross">&mdash;</td><td class="check">&check;</td><td class="cross">&mdash;</td><td class="cross">&mdash;</td></tr>
+            <tr><td>Skapa Office-filer</td><td class="cross">&mdash;</td><td class="cross">&mdash;</td><td class="check">&check;</td><td class="check">&check;</td></tr>
+            <tr><td>Interaktiva dashboards</td><td class="cross">&mdash;</td><td class="cross">&mdash;</td><td class="check">&check;</td><td class="check">&check;</td></tr>
+            <tr><td>Webbl&auml;sarautomation</td><td class="cross">&mdash;</td><td class="cross">&mdash;</td><td class="check">&check;</td><td class="cross">&mdash;</td></tr>
+            <tr><td>Externa integrationer (MCP)</td><td class="cross">&mdash;</td><td class="cross">&mdash;</td><td class="check">&check;</td><td class="check">&check;</td></tr>
+            <tr><td>K&ouml;ra &amp; testa kod</td><td class="cross">&mdash;</td><td class="cross">&mdash;</td><td class="check">&check;</td><td class="check">&check;</td></tr>
+            <tr><td>Bygga agenter &amp; automatisering</td><td class="cross">&mdash;</td><td class="cross">&mdash;</td><td class="cross">&mdash;</td><td class="check">&check;</td></tr>
+            <tr>
+              <td style="font-weight:600">Mindset-skifte</td>
+              <td style="color:var(--accent-blue);font-size:0.8rem">Tankepartner</td>
+              <td style="color:var(--accent-green);font-size:0.8rem">Delad kontext</td>
+              <td style="color:var(--accent-orange);font-size:0.8rem">Delegering</td>
+              <td style="color:var(--accent-purple);font-size:0.8rem">Systembygge</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
-
-    <!-- Teknisk setup -->
-    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:2rem;position:relative;overflow:hidden;">
-      <div style="position:absolute;top:0;left:0;right:0;height:3px;background:var(--accent-blue);"></div>
-      <h4 style="font-size:1.1rem;font-weight:700;margin-bottom:1rem;">&#128187; Teknisk setup</h4>
-      <div style="color:var(--text-muted);font-size:0.88rem;line-height:1.7;">
-        <p style="margin-bottom:0.75rem;"><strong style="color:var(--text);">Chat &amp; Projects</strong> &mdash; Ingen installation. Fungerar i webbl&auml;saren p&aring; claude.ai.</p>
-        <p style="margin-bottom:0.75rem;"><strong style="color:var(--text);">Cowork</strong> &mdash; Kr&auml;ver Claude Desktop-appen (Mac/Windows). Installera och testa i f&ouml;rv&auml;g. Cowork aktiveras i desktopappen.</p>
-        <p style="margin-bottom:0.75rem;"><strong style="color:var(--text);">Code</strong> &mdash; Kr&auml;ver terminal och CLI-installation. Se till att deltagare som vill anv&auml;nda Code har installerat det innan workshopen.</p>
-        <p><strong style="color:var(--text);">Wi-Fi</strong> &mdash; S&auml;kerst&auml;ll stabil internetuppkoppling f&ouml;r alla deltagare. AI-verktyg &auml;r bandbreddskr&auml;vande.</p>
-      </div>
-    </div>
-
-    <!-- Data & material -->
-    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:2rem;position:relative;overflow:hidden;">
-      <div style="position:absolute;top:0;left:0;right:0;height:3px;background:var(--accent-green);"></div>
-      <h4 style="font-size:1.1rem;font-weight:700;margin-bottom:1rem;">&#128202; Data &amp; material</h4>
-      <div style="color:var(--text-muted);font-size:0.88rem;line-height:1.7;">
-        <p style="margin-bottom:0.75rem;"><strong style="color:var(--text);">Mock-databas</strong> &mdash; F&ouml;rbered realistisk retaildata: f&ouml;rs&auml;ljning per butik/kategori, kundrecensioner, lagerniv&aring;er, konkurrentpriser. G&ouml;r tillg&auml;nglig som CSV-filer, enkel API, och/eller Airtable-bas.</p>
-        <p style="margin-bottom:0.75rem;"><strong style="color:var(--text);">F&ouml;rberett Project</strong> &mdash; Skapa ett Claude Project med relevant kontext (sortimentsdata, varum&auml;rkesriktlinjer) s&aring; deltagare kan utforska Projects-funktionen direkt.</p>
-        <p><strong style="color:var(--text);">Delat dokument</strong> &mdash; F&ouml;rbered en enkel guide med l&auml;nkar till alla resurser, inloggningsuppgifter och f&ouml;reslagna utmaningar som deltagarna kan ha &ouml;ppet under sessionen.</p>
-      </div>
-    </div>
-
-    <!-- Dagen-checklista -->
-    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:2rem;position:relative;overflow:hidden;">
-      <div style="position:absolute;top:0;left:0;right:0;height:3px;background:var(--accent-purple);"></div>
-      <h4 style="font-size:1.1rem;font-weight:700;margin-bottom:1rem;">&#9989; Dagen-checklista</h4>
-      <div style="color:var(--text-muted);font-size:0.88rem;line-height:1.7;">
-        <p style="margin-bottom:0.5rem;">&#9744; Alla har konton och kan logga in</p>
-        <p style="margin-bottom:0.5rem;">&#9744; Claude Desktop installerad (Cowork-deltagare)</p>
-        <p style="margin-bottom:0.5rem;">&#9744; Claude Code installerad (Code-deltagare)</p>
-        <p style="margin-bottom:0.5rem;">&#9744; Mock-data tillg&auml;nglig och testad</p>
-        <p style="margin-bottom:0.5rem;">&#9744; Wi-Fi testat med alla samtidigt uppkopplade</p>
-        <p style="margin-bottom:0.5rem;">&#9744; F&ouml;rberett Project skapat och delat</p>
-        <p style="margin-bottom:0.5rem;">&#9744; Demo f&ouml;rberedd och testad</p>
-        <p>&#9744; Guide-dokument delat med alla deltagare</p>
-      </div>
-    </div>
-
   </div>
 
-  <!-- Prisöversikt -->
-  <div style="margin-top:2.5rem;background:linear-gradient(135deg,rgba(232,123,53,0.06),rgba(155,109,215,0.06));border:1px solid rgba(232,123,53,0.15);border-radius:var(--radius);padding:2rem;overflow-x:auto;">
-    <h4 style="font-size:1rem;font-weight:700;margin-bottom:1rem;">Snabb pris&ouml;versikt per deltagare</h4>
-    <table style="width:100%;border-collapse:collapse;min-width:500px;font-size:0.85rem;">
-      <tr style="border-bottom:1px solid var(--border);">
-        <th style="text-align:left;padding:0.6rem 1rem;color:var(--text);font-weight:600;">Plan</th>
-        <th style="text-align:left;padding:0.6rem 1rem;color:var(--text);font-weight:600;">Pris/m&aring;n</th>
-        <th style="text-align:left;padding:0.6rem 1rem;color:var(--text);font-weight:600;">Inkluderar</th>
-        <th style="text-align:left;padding:0.6rem 1rem;color:var(--text);font-weight:600;">R&auml;cker f&ouml;r</th>
-      </tr>
-      <tr style="border-bottom:1px solid var(--border);">
-        <td style="padding:0.6rem 1rem;color:var(--text);font-weight:600;">Pro</td>
-        <td style="padding:0.6rem 1rem;color:var(--text-muted);">$20</td>
-        <td style="padding:0.6rem 1rem;color:var(--text-muted);">Chat, Projects, Cowork, Code</td>
-        <td style="padding:0.6rem 1rem;color:var(--accent-green);">De flesta deltagare</td>
-      </tr>
-      <tr style="border-bottom:1px solid var(--border);">
-        <td style="padding:0.6rem 1rem;color:var(--text);font-weight:600;">Team</td>
-        <td style="padding:0.6rem 1rem;color:var(--text-muted);">$25</td>
-        <td style="padding:0.6rem 1rem;color:var(--text-muted);">Allt i Pro + admin &amp; teamhantering</td>
-        <td style="padding:0.6rem 1rem;color:var(--accent-green);">10+ deltagare, enklare admin</td>
-      </tr>
-      <tr>
-        <td style="padding:0.6rem 1rem;color:var(--text);font-weight:600;">Max</td>
-        <td style="padding:0.6rem 1rem;color:var(--text-muted);">fr&aring;n $100</td>
-        <td style="padding:0.6rem 1rem;color:var(--text-muted);">5&ndash;20x mer anv&auml;ndning</td>
-        <td style="padding:0.6rem 1rem;color:var(--accent-orange);">Intensivt Code-byggande</td>
-      </tr>
-    </table>
-    <p style="color:var(--text-muted);font-size:0.8rem;margin-top:1rem;opacity:0.7;">Priser i USD per person/m&aring;nad. Se <a href="https://claude.com/pricing" style="color:var(--accent-orange);text-decoration:none;">claude.com/pricing</a> f&ouml;r aktuella priser.</p>
+  <!-- ====== SLIDE 8: USE CASES ====== -->
+  <div class="slide" data-slide="8">
+    <div class="slide-inner">
+      <div class="section-label">03 &mdash; Retailanv&auml;ndning</div>
+      <h2>Vad kan du l&ouml;sa?</h2>
+      <p class="section-desc">Konkreta exempel p&aring; hur olika roller kan anv&auml;nda verktygen.</p>
+      <div class="tabs">
+        <button class="tab-btn active" onclick="showTab('all', this)">Alla</button>
+        <button class="tab-btn" onclick="showTab('chat', this)">Chat &amp; Projects</button>
+        <button class="tab-btn" onclick="showTab('cowork', this)">Cowork</button>
+        <button class="tab-btn" onclick="showTab('code', this)">Code</button>
+      </div>
+      <div class="usecase-grid">
+        <div class="usecase-card" data-tool="chat"><div class="usecase-role" style="background:var(--accent-blue-soft);color:var(--accent-blue);">Chat / Projects</div><h4>Leverant&ouml;rsanalys</h4><p>Ladda upp leverant&ouml;rsavtal och be Claude j&auml;mf&ouml;ra villkor, identifiera f&ouml;rhandlingsutrymme.</p></div>
+        <div class="usecase-card" data-tool="chat"><div class="usecase-role" style="background:var(--accent-blue-soft);color:var(--accent-blue);">Chat / Projects</div><h4>Kampanjtexter</h4><p>Skapa och iterera p&aring; kampanjtexter, produktbeskrivningar och s&auml;songskommunikation.</p></div>
+        <div class="usecase-card" data-tool="chat"><div class="usecase-role" style="background:var(--accent-green-soft);color:var(--accent-green);">Projects</div><h4>Intern kunskapsbas</h4><p>Bygg ett Project med produktinfo, FAQ:er och returpolicys som teamet kan fr&aring;ga mot.</p></div>
+        <div class="usecase-card" data-tool="cowork"><div class="usecase-role" style="background:var(--accent-orange-soft);color:var(--accent-orange);">Cowork</div><h4>F&ouml;rs&auml;ljningsdashboard</h4><p>Peka Cowork mot data och f&aring; interaktiva dashboards, Excel-rapporter eller presentationer.</p></div>
+        <div class="usecase-card" data-tool="cowork"><div class="usecase-role" style="background:var(--accent-orange-soft);color:var(--accent-orange);">Cowork</div><h4>Omv&auml;rldsbevakning</h4><p>L&aring;t Claude s&ouml;ka webben efter konkurrentpriser, lanseringar och trender.</p></div>
+        <div class="usecase-card" data-tool="cowork"><div class="usecase-role" style="background:var(--accent-orange-soft);color:var(--accent-orange);">Cowork</div><h4>Lageranalys</h4><p>Analysera lagerniv&aring;er, identifiera &ouml;verstock och skapa beslutsunderlag som Excel-fil.</p></div>
+        <div class="usecase-card" data-tool="code"><div class="usecase-role" style="background:var(--accent-purple-soft);color:var(--accent-purple);">Code</div><h4>Automatisk trendagent</h4><p>Bygg en agent som h&auml;mtar data, analyserar f&ouml;rs&auml;ljningstrender och genererar en sammanfattning.</p></div>
+        <div class="usecase-card" data-tool="code"><div class="usecase-role" style="background:var(--accent-purple-soft);color:var(--accent-purple);">Code</div><h4>Sortimentschatbot</h4><p>Bygg en intern chatbot kopplad mot produktdatabasen f&ouml;r sortimentsfr&aring;gor.</p></div>
+        <div class="usecase-card" data-tool="code"><div class="usecase-role" style="background:var(--accent-purple-soft);color:var(--accent-purple);">Code</div><h4>Datapipeline</h4><p>Bygg en pipeline som automatiskt transformerar r&aring;data till insikter.</p></div>
+      </div>
+    </div>
   </div>
 
-</section>
+  <!-- ====== SLIDE 9: WORKSHOP ====== -->
+  <div class="slide" data-slide="9">
+    <div class="slide-inner">
+      <div class="section-label">04 &mdash; Uppl&auml;gg</div>
+      <h2>2 timmar. Fritt utforskande.</h2>
+      <p class="section-desc">Kort intro, sedan utforskar du sj&auml;lv &mdash; med handledare i rummet.</p>
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-dot">1</div>
+          <div class="timeline-time">0:00 &mdash; 0:15 (15 min)</div>
+          <h4>Kick-off &amp; mindset</h4>
+          <p>Kort intro om paradigmskiftena: varf&ouml;r vi &auml;r h&auml;r, vad som &auml;r m&ouml;jligt. Snabb demo av Chat vs. Cowork f&ouml;r att visa skillnaden. &Ouml;versikt av mock-databasen.</p>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot">2</div>
+          <div class="timeline-time">0:15 &mdash; 1:40 (85 min)</div>
+          <h4>Utforska &amp; experimentera</h4>
+          <p>V&auml;lj ett verktyg som k&auml;nns r&auml;tt. Jobba ensam eller i par. Utg&aring; fr&aring;n ett problem du k&auml;nner igen, eller v&auml;lj en utmaning. Byt g&auml;rna verktyg under v&auml;gen.</p>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot">3</div>
+          <div class="timeline-time">1:40 &mdash; 2:00 (20 min)</div>
+          <h4>Show &amp; tell</h4>
+          <p>Kort runda d&auml;r den som vill visar vad de hittade. Det mest v&auml;rdefulla &auml;r ofta insikterna, inte leverablerna. Avsluta med: vad tar du med dig?</p>
+        </div>
+      </div>
+      <div class="callout">
+        <h3>Det finns inget &rdquo;r&auml;tt&rdquo; s&auml;tt</h3>
+        <p>Du beh&ouml;ver inte kunna koda. Du beh&ouml;ver inte ha en plan. Det enda vi ber dig om &auml;r att prova n&aring;got du inte gjort f&ouml;rut.</p>
+      </div>
+    </div>
+  </div>
 
-<footer>
-  AI Hackathon med Claude &mdash; Workshop Guide
-</footer>
+  <!-- ====== SLIDE 10: CHALLENGES ====== -->
+  <div class="slide" data-slide="10">
+    <div class="slide-inner">
+      <div class="section-label">05 &mdash; Inspiration</div>
+      <h2>Beh&ouml;ver du en startpunkt?</h2>
+      <p class="section-desc">V&auml;lj en utmaning, eller ta med ett eget problem fr&aring;n din vardag.</p>
+      <div class="challenges-grid">
+        <div class="challenge-card"><div class="challenge-emoji">&#128269;</div><h4>Omv&auml;rldsbevakning</h4><p>Samla in och sammanfatta nyheter, prisf&ouml;r&auml;ndringar och trender fr&aring;n konkurrenter.</p></div>
+        <div class="challenge-card"><div class="challenge-emoji">&#128202;</div><h4>F&ouml;rs&auml;ljningsanalys</h4><p>Hitta anomalier, trender och insikter i mock-datan.</p></div>
+        <div class="challenge-card"><div class="challenge-emoji">&#129302;</div><h4>Intern chatbot</h4><p>Skapa en kunskapsbas som svarar p&aring; sortiment och lagerniv&aring;er.</p></div>
+        <div class="challenge-card"><div class="challenge-emoji">&#128230;</div><h4>Lageroptimering</h4><p>Analysera lager och efterfr&aring;gem&ouml;nster f&ouml;r att hitta &ouml;verstock.</p></div>
+        <div class="challenge-card"><div class="challenge-emoji">&#9997;&#65039;</div><h4>Kampanjgenerering</h4><p>Personaliserade kampanjtexter f&ouml;r olika kundsegment.</p></div>
+        <div class="challenge-card"><div class="challenge-emoji">&#128200;</div><h4>Priss&auml;ttningsanalys</h4><p>J&auml;mf&ouml;r priser mot konkurrenters och ta fram rekommendationer.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 11: FÖRBEREDELSER ====== -->
+  <div class="slide" data-slide="11">
+    <div class="slide-inner">
+      <div class="section-label">06 &mdash; F&ouml;rberedelser</div>
+      <h2>Vad beh&ouml;ver vi g&ouml;ra innan?</h2>
+      <p class="section-desc">Praktisk checklista f&ouml;r att allt ska rulla fr&aring;n minut ett.</p>
+      <div class="prep-grid">
+        <div class="prep-card">
+          <div class="bar" style="background:var(--accent-orange);"></div>
+          <h4>&#127919; Konton &amp; licenser</h4>
+          <div class="prep-text">
+            <p><strong>Minimum: Pro ($20/m&aring;n)</strong> &mdash; Chat, Projects, Cowork och Code. R&auml;cker f&ouml;r de flesta.</p>
+            <p><strong>Code-sp&aring;ret: Max ($100/m&aring;n)</strong> &mdash; 5x mer anv&auml;ndning f&ouml;r intensivt byggande.</p>
+            <p><strong>Team ($25/m&aring;n)</strong> &mdash; Admin-kontroll, gemensam fakturering. Bra f&ouml;r 10+ deltagare.</p>
+            <p><strong>Tips:</strong> Skapa konton i f&ouml;rv&auml;g. Skicka inloggningsuppgifter dagen innan.</p>
+          </div>
+        </div>
+        <div class="prep-card">
+          <div class="bar" style="background:var(--accent-blue);"></div>
+          <h4>&#128187; Teknisk setup</h4>
+          <div class="prep-text">
+            <p><strong>Chat &amp; Projects</strong> &mdash; Ingen installation. Fungerar i webbl&auml;saren.</p>
+            <p><strong>Cowork</strong> &mdash; Kr&auml;ver Claude Desktop-appen. Installera i f&ouml;rv&auml;g.</p>
+            <p><strong>Code</strong> &mdash; Kr&auml;ver terminal och CLI. Se till att det &auml;r installerat innan.</p>
+            <p><strong>Wi-Fi</strong> &mdash; S&auml;kerst&auml;ll stabil uppkoppling f&ouml;r alla.</p>
+          </div>
+        </div>
+        <div class="prep-card">
+          <div class="bar" style="background:var(--accent-green);"></div>
+          <h4>&#128202; Data &amp; material</h4>
+          <div class="prep-text">
+            <p><strong>Mock-databas</strong> &mdash; Realistisk retaildata: f&ouml;rs&auml;ljning, recensioner, lager, konkurrentpriser.</p>
+            <p><strong>F&ouml;rberett Project</strong> &mdash; Claude Project med sortiment och riktlinjer.</p>
+            <p><strong>Delat dokument</strong> &mdash; Guide med l&auml;nkar och inloggningsuppgifter.</p>
+          </div>
+        </div>
+        <div class="prep-card">
+          <div class="bar" style="background:var(--accent-purple);"></div>
+          <h4>&#9989; Dagen-checklista</h4>
+          <div class="prep-text">
+            <p>&#9744; Alla har konton och kan logga in</p>
+            <p>&#9744; Claude Desktop installerad</p>
+            <p>&#9744; Claude Code installerad</p>
+            <p>&#9744; Mock-data tillg&auml;nglig och testad</p>
+            <p>&#9744; Wi-Fi testat</p>
+            <p>&#9744; F&ouml;rberett Project skapat</p>
+            <p>&#9744; Demo f&ouml;rberedd</p>
+            <p>&#9744; Guide-dokument delat</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="pricing-box">
+        <h4>Snabb pris&ouml;versikt per deltagare</h4>
+        <table>
+          <tr><th>Plan</th><th>Pris/m&aring;n</th><th>Inkluderar</th><th>R&auml;cker f&ouml;r</th></tr>
+          <tr><td style="color:var(--text);font-weight:600;">Pro</td><td>$20</td><td>Chat, Projects, Cowork, Code</td><td style="color:var(--accent-green);">De flesta deltagare</td></tr>
+          <tr><td style="color:var(--text);font-weight:600;">Team</td><td>$25</td><td>Allt i Pro + admin &amp; teamhantering</td><td style="color:var(--accent-green);">10+ deltagare</td></tr>
+          <tr><td style="color:var(--text);font-weight:600;">Max</td><td>fr&aring;n $100</td><td>5&ndash;20x mer anv&auml;ndning</td><td style="color:var(--accent-orange);">Intensivt Code-byggande</td></tr>
+        </table>
+        <p style="color:var(--text-muted);font-size:0.78rem;margin-top:0.8rem;opacity:0.7;">Priser i USD per person/m&aring;nad. Se <a href="https://claude.com/pricing" style="color:var(--accent-orange);text-decoration:none;">claude.com/pricing</a> f&ouml;r aktuella priser.</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ===== NAVIGATION BAR ===== -->
+<div class="nav-bar">
+  <button class="nav-btn" id="prevBtn" onclick="navigate(-1)" disabled>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    <span>Tillbaka</span>
+  </button>
+
+  <div class="nav-center">
+    <div class="progress-dots" id="progressDots"></div>
+    <div class="slide-counter" id="slideCounter">1 / 12</div>
+  </div>
+
+  <button class="nav-btn" id="nextBtn" onclick="navigate(1)">
+    <span>N&auml;sta</span>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+  </button>
+</div>
+
+<!-- ===== KEYBOARD HINT ===== -->
+<div class="kbd-hint">
+  <span class="kbd">&larr;</span>
+  <span class="kbd">&rarr;</span>
+  navigera
+</div>
 
 <script>
-function showTab(tool) {
-  document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-  event.target.classList.add('active');
-  document.querySelectorAll('.usecase-card').forEach(card => {
-    if (tool === 'all' || card.dataset.tool === tool) {
-      card.style.display = '';
-    } else {
-      card.style.display = 'none';
-    }
+const slides = document.querySelectorAll('.slide');
+const totalSlides = slides.length;
+let currentSlide = 0;
+let isAnimating = false;
+
+// Build progress dots
+const dotsContainer = document.getElementById('progressDots');
+for (let i = 0; i < totalSlides; i++) {
+  const dot = document.createElement('div');
+  dot.className = 'progress-dot' + (i === 0 ? ' active' : '');
+  dot.onclick = () => goToSlide(i);
+  dotsContainer.appendChild(dot);
+}
+
+function updateUI() {
+  document.getElementById('prevBtn').disabled = currentSlide === 0;
+  document.getElementById('nextBtn').disabled = currentSlide === totalSlides - 1;
+  document.getElementById('slideCounter').textContent = (currentSlide + 1) + ' / ' + totalSlides;
+
+  dotsContainer.querySelectorAll('.progress-dot').forEach((dot, i) => {
+    dot.className = 'progress-dot' + (i === currentSlide ? ' active' : '');
   });
 }
 
-// Fade-in on scroll
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.style.opacity = '1';
-      entry.target.style.transform = 'translateY(0)';
-    }
-  });
-}, { threshold: 0.1 });
+function goToSlide(target) {
+  if (isAnimating || target === currentSlide || target < 0 || target >= totalSlides) return;
+  isAnimating = true;
 
-document.querySelectorAll('.tool-card, .usecase-card, .challenge-card, .timeline-item, .shift-step, .meta-card').forEach(el => {
-  el.style.opacity = '0';
-  el.style.transform = 'translateY(20px)';
-  el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-  observer.observe(el);
+  const direction = target > currentSlide ? 1 : -1;
+  const oldSlide = slides[currentSlide];
+  const newSlide = slides[target];
+
+  // Exit old slide
+  oldSlide.classList.remove('active');
+  oldSlide.classList.add(direction > 0 ? 'exit-left' : '');
+  if (direction < 0) {
+    oldSlide.style.transform = 'translateX(60px)';
+    oldSlide.style.opacity = '0';
+  }
+
+  // Enter new slide
+  newSlide.style.transition = 'none';
+  newSlide.style.transform = direction > 0 ? 'translateX(60px)' : 'translateX(-60px)';
+  newSlide.style.opacity = '0';
+
+  requestAnimationFrame(() => {
+    newSlide.style.transition = 'opacity 0.45s ease, transform 0.45s ease';
+    newSlide.classList.add('active');
+    newSlide.style.transform = '';
+    newSlide.style.opacity = '';
+    newSlide.scrollTop = 0;
+  });
+
+  currentSlide = target;
+  updateUI();
+
+  setTimeout(() => {
+    oldSlide.classList.remove('exit-left');
+    oldSlide.style.transform = '';
+    oldSlide.style.opacity = '';
+    isAnimating = false;
+  }, 480);
+}
+
+function navigate(dir) {
+  goToSlide(currentSlide + dir);
+}
+
+// Keyboard navigation
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); navigate(1); }
+  if (e.key === 'ArrowLeft') { e.preventDefault(); navigate(-1); }
+  if (e.key === 'Home') { e.preventDefault(); goToSlide(0); }
+  if (e.key === 'End') { e.preventDefault(); goToSlide(totalSlides - 1); }
 });
+
+// Touch/swipe support
+let touchStartX = 0;
+document.addEventListener('touchstart', (e) => { touchStartX = e.touches[0].clientX; });
+document.addEventListener('touchend', (e) => {
+  const diff = touchStartX - e.changedTouches[0].clientX;
+  if (Math.abs(diff) > 50) { navigate(diff > 0 ? 1 : -1); }
+});
+
+// Tab filter
+function showTab(tool, btn) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.usecase-card').forEach(card => {
+    card.style.display = (tool === 'all' || card.dataset.tool === tool) ? '' : 'none';
+  });
+}
+
+updateUI();
 </script>
 
 </body>
