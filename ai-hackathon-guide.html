@@ -10,22 +10,22 @@
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
   :root {
-    --bg: #0a0a0f;
-    --surface: #13131a;
-    --surface-hover: #1a1a24;
-    --border: #2a2a3a;
-    --text: #e8e8f0;
-    --text-muted: #8888a0;
-    --accent-orange: #e87b35;
-    --accent-orange-soft: rgba(232, 123, 53, 0.12);
-    --accent-blue: #4a90d9;
-    --accent-blue-soft: rgba(74, 144, 217, 0.12);
-    --accent-green: #3dbd7d;
-    --accent-green-soft: rgba(61, 189, 125, 0.12);
-    --accent-purple: #9b6dd7;
-    --accent-purple-soft: rgba(155, 109, 215, 0.12);
-    --accent-pink: #d94a7a;
-    --accent-pink-soft: rgba(217, 74, 122, 0.12);
+    --bg: #141833;
+    --surface: #1c2148;
+    --surface-hover: #242a55;
+    --border: #2e3563;
+    --text: #f0eff5;
+    --text-muted: #9a98b8;
+    --accent-orange: #eda090;
+    --accent-orange-soft: rgba(237, 160, 144, 0.12);
+    --accent-blue: #7ba4d9;
+    --accent-blue-soft: rgba(123, 164, 217, 0.12);
+    --accent-green: #6dc9a0;
+    --accent-green-soft: rgba(109, 201, 160, 0.12);
+    --accent-purple: #b094e0;
+    --accent-purple-soft: rgba(176, 148, 224, 0.12);
+    --accent-pink: #eda090;
+    --accent-pink-soft: rgba(237, 160, 144, 0.12);
     --radius: 16px;
     --radius-sm: 10px;
   }
@@ -50,12 +50,12 @@
 
   .slide {
     position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
+    top: 0; left: 0; right: 0; bottom: 64px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 4rem 2rem 6rem;
+    padding: 3rem 2rem 2rem;
     opacity: 0;
     transform: translateX(60px);
     pointer-events: none;
@@ -82,14 +82,14 @@
     position: fixed;
     bottom: 0; left: 0; right: 0;
     height: 64px;
-    background: rgba(10, 10, 15, 0.92);
+    background: rgba(20, 24, 51, 0.95);
     backdrop-filter: blur(16px);
     border-top: 1px solid var(--border);
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 0 2rem;
-    z-index: 100;
+    z-index: 1000;
   }
 
   .nav-btn {
@@ -130,18 +130,23 @@
     gap: 6px;
   }
   .progress-dot {
-    width: 8px;
-    height: 8px;
+    width: 10px;
+    height: 10px;
     border-radius: 50%;
     background: var(--border);
     transition: all 0.3s;
     cursor: pointer;
+    position: relative;
+    z-index: 1001;
+  }
+  .progress-dot:hover {
+    background: var(--text-muted);
   }
   .progress-dot.active {
     background: var(--accent-orange);
-    box-shadow: 0 0 8px rgba(232,123,53,0.4);
-    width: 24px;
-    border-radius: 4px;
+    box-shadow: 0 0 10px rgba(237,160,144,0.4);
+    width: 26px;
+    border-radius: 5px;
   }
 
   .slide-counter {
@@ -161,7 +166,7 @@
     align-items: center;
     gap: 8px;
     background: var(--accent-orange-soft);
-    border: 1px solid rgba(232,123,53,0.25);
+    border: 1px solid rgba(237,160,144,0.3);
     color: var(--accent-orange);
     padding: 8px 18px;
     border-radius: 100px;
@@ -181,7 +186,7 @@
     margin-right: auto;
   }
   .hero-slide h1 span {
-    background: linear-gradient(135deg, var(--accent-orange), #f0a060);
+    background: linear-gradient(135deg, var(--accent-orange), #f0c8b8);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }
@@ -206,7 +211,7 @@
     transform: translateX(-50%);
     width: 800px;
     height: 800px;
-    background: radial-gradient(circle, rgba(232,123,53,0.08) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(237,160,144,0.1) 0%, transparent 70%);
     pointer-events: none;
   }
   .start-hint {
@@ -380,7 +385,7 @@
   .shift-step.step-green .shift-number { background: var(--accent-green-soft); color: var(--accent-green); border: 2px solid rgba(61,189,125,0.3); }
   .shift-step.step-green .shift-connector { background: linear-gradient(to bottom, var(--accent-green), var(--accent-orange)); }
   .shift-step.step-green .shift-label { background: var(--accent-green-soft); color: var(--accent-green); }
-  .shift-step.step-orange .shift-number { background: var(--accent-orange-soft); color: var(--accent-orange); border: 2px solid rgba(232,123,53,0.3); }
+  .shift-step.step-orange .shift-number { background: var(--accent-orange-soft); color: var(--accent-orange); border: 2px solid rgba(237,160,144,0.35); }
   .shift-step.step-orange .shift-connector { background: linear-gradient(to bottom, var(--accent-orange), var(--accent-purple)); }
   .shift-step.step-orange .shift-label { background: var(--accent-orange-soft); color: var(--accent-orange); }
   .shift-step.step-purple .shift-number { background: var(--accent-purple-soft); color: var(--accent-purple); border: 2px solid rgba(155,109,215,0.3); }
@@ -507,7 +512,7 @@
     transition: all 0.2s;
   }
   .tab-btn:hover { background: var(--surface-hover); color: var(--text); }
-  .tab-btn.active { background: var(--accent-orange-soft); border-color: rgba(232,123,53,0.3); color: var(--accent-orange); }
+  .tab-btn.active { background: var(--accent-orange-soft); border-color: rgba(237,160,144,0.35); color: var(--accent-orange); }
 
   .usecase-grid {
     display: grid;
@@ -565,8 +570,8 @@
   .timeline-item p { color: var(--text-muted); font-size: 0.88rem; line-height: 1.6; }
 
   .callout {
-    background: linear-gradient(135deg, rgba(232,123,53,0.06), rgba(155,109,215,0.06));
-    border: 1px solid rgba(232,123,53,0.15);
+    background: linear-gradient(135deg, rgba(237,160,144,0.08), rgba(176,148,224,0.06));
+    border: 1px solid rgba(237,160,144,0.2);
     border-radius: var(--radius);
     padding: 2rem;
     margin-top: 2rem;
@@ -588,7 +593,7 @@
     padding: 1.3rem;
     transition: all 0.2s;
   }
-  .challenge-card:hover { border-color: rgba(232,123,53,0.3); background: var(--surface-hover); }
+  .challenge-card:hover { border-color: rgba(237,160,144,0.35); background: var(--surface-hover); }
   .challenge-emoji { font-size: 1.6rem; margin-bottom: 0.6rem; }
   .challenge-card h4 { font-size: 0.95rem; font-weight: 600; margin-bottom: 0.35rem; }
   .challenge-card p { color: var(--text-muted); font-size: 0.82rem; line-height: 1.55; }
@@ -615,8 +620,8 @@
 
   .pricing-box {
     margin-top: 2rem;
-    background: linear-gradient(135deg, rgba(232,123,53,0.06), rgba(155,109,215,0.06));
-    border: 1px solid rgba(232,123,53,0.15);
+    background: linear-gradient(135deg, rgba(237,160,144,0.08), rgba(176,148,224,0.06));
+    border: 1px solid rgba(237,160,144,0.2);
     border-radius: var(--radius);
     padding: 1.75rem;
     overflow-x: auto;
@@ -1048,7 +1053,7 @@
 
 <!-- ===== NAVIGATION BAR ===== -->
 <div class="nav-bar">
-  <button class="nav-btn" id="prevBtn" onclick="navigate(-1)" disabled>
+  <button class="nav-btn" id="prevBtn" disabled>
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
     <span>Tillbaka</span>
   </button>
@@ -1058,7 +1063,7 @@
     <div class="slide-counter" id="slideCounter">1 / 12</div>
   </div>
 
-  <button class="nav-btn" id="nextBtn" onclick="navigate(1)">
+  <button class="nav-btn" id="nextBtn">
     <span>N&auml;sta</span>
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
   </button>
@@ -1072,100 +1077,119 @@
 </div>
 
 <script>
-const slides = document.querySelectorAll('.slide');
-const totalSlides = slides.length;
-let currentSlide = 0;
-let isAnimating = false;
+(function() {
+  const slides = document.querySelectorAll('.slide');
+  const totalSlides = slides.length;
+  let currentSlide = 0;
+  let animTimer = null;
 
-// Build progress dots
-const dotsContainer = document.getElementById('progressDots');
-for (let i = 0; i < totalSlides; i++) {
-  const dot = document.createElement('div');
-  dot.className = 'progress-dot' + (i === 0 ? ' active' : '');
-  dot.onclick = () => goToSlide(i);
-  dotsContainer.appendChild(dot);
-}
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const counter = document.getElementById('slideCounter');
+  const dotsContainer = document.getElementById('progressDots');
 
-function updateUI() {
-  document.getElementById('prevBtn').disabled = currentSlide === 0;
-  document.getElementById('nextBtn').disabled = currentSlide === totalSlides - 1;
-  document.getElementById('slideCounter').textContent = (currentSlide + 1) + ' / ' + totalSlides;
-
-  dotsContainer.querySelectorAll('.progress-dot').forEach((dot, i) => {
-    dot.className = 'progress-dot' + (i === currentSlide ? ' active' : '');
-  });
-}
-
-function goToSlide(target) {
-  if (isAnimating || target === currentSlide || target < 0 || target >= totalSlides) return;
-  isAnimating = true;
-
-  const direction = target > currentSlide ? 1 : -1;
-  const oldSlide = slides[currentSlide];
-  const newSlide = slides[target];
-
-  // Exit old slide
-  oldSlide.classList.remove('active');
-  oldSlide.classList.add(direction > 0 ? 'exit-left' : '');
-  if (direction < 0) {
-    oldSlide.style.transform = 'translateX(60px)';
-    oldSlide.style.opacity = '0';
+  // Build progress dots
+  for (let i = 0; i < totalSlides; i++) {
+    const dot = document.createElement('div');
+    dot.className = 'progress-dot' + (i === 0 ? ' active' : '');
+    dot.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      goToSlide(i);
+    });
+    dotsContainer.appendChild(dot);
   }
 
-  // Enter new slide
-  newSlide.style.transition = 'none';
-  newSlide.style.transform = direction > 0 ? 'translateX(60px)' : 'translateX(-60px)';
-  newSlide.style.opacity = '0';
+  function updateUI() {
+    prevBtn.disabled = (currentSlide === 0);
+    nextBtn.disabled = (currentSlide === totalSlides - 1);
+    counter.textContent = (currentSlide + 1) + ' / ' + totalSlides;
+    const dots = dotsContainer.querySelectorAll('.progress-dot');
+    for (let i = 0; i < dots.length; i++) {
+      dots[i].className = 'progress-dot' + (i === currentSlide ? ' active' : '');
+    }
+  }
 
-  requestAnimationFrame(() => {
-    newSlide.style.transition = 'opacity 0.45s ease, transform 0.45s ease';
+  function goToSlide(target) {
+    if (target === currentSlide || target < 0 || target >= totalSlides) return;
+
+    // Clear any pending animation
+    if (animTimer) { clearTimeout(animTimer); animTimer = null; }
+
+    const direction = target > currentSlide ? 1 : -1;
+    const oldSlide = slides[currentSlide];
+    const newSlide = slides[target];
+
+    // Immediately hide old slide
+    oldSlide.classList.remove('active', 'exit-left');
+    oldSlide.style.transition = 'none';
+    oldSlide.style.opacity = '0';
+    oldSlide.style.transform = direction > 0 ? 'translateX(-60px)' : 'translateX(60px)';
+
+    // Prepare new slide at start position (no transition)
+    newSlide.style.transition = 'none';
+    newSlide.style.opacity = '0';
+    newSlide.style.transform = direction > 0 ? 'translateX(60px)' : 'translateX(-60px)';
     newSlide.classList.add('active');
-    newSlide.style.transform = '';
-    newSlide.style.opacity = '';
+
+    // Force reflow
+    void newSlide.offsetWidth;
+
+    // Animate new slide in
+    newSlide.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+    newSlide.style.opacity = '1';
+    newSlide.style.transform = 'translateX(0)';
     newSlide.scrollTop = 0;
+
+    currentSlide = target;
+    updateUI();
+
+    // Clean up old slide after animation
+    animTimer = setTimeout(function() {
+      oldSlide.style.transition = '';
+      oldSlide.style.opacity = '';
+      oldSlide.style.transform = '';
+      animTimer = null;
+    }, 450);
+  }
+
+  // Navigation buttons
+  prevBtn.addEventListener('click', function(e) {
+    e.preventDefault();
+    goToSlide(currentSlide - 1);
+  });
+  nextBtn.addEventListener('click', function(e) {
+    e.preventDefault();
+    goToSlide(currentSlide + 1);
   });
 
-  currentSlide = target;
+  // Keyboard navigation
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); goToSlide(currentSlide + 1); }
+    if (e.key === 'ArrowLeft') { e.preventDefault(); goToSlide(currentSlide - 1); }
+    if (e.key === 'Home') { e.preventDefault(); goToSlide(0); }
+    if (e.key === 'End') { e.preventDefault(); goToSlide(totalSlides - 1); }
+  });
+
+  // Touch/swipe support
+  let touchStartX = 0;
+  document.addEventListener('touchstart', function(e) { touchStartX = e.touches[0].clientX; });
+  document.addEventListener('touchend', function(e) {
+    const diff = touchStartX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) { goToSlide(currentSlide + (diff > 0 ? 1 : -1)); }
+  });
+
   updateUI();
+})();
 
-  setTimeout(() => {
-    oldSlide.classList.remove('exit-left');
-    oldSlide.style.transform = '';
-    oldSlide.style.opacity = '';
-    isAnimating = false;
-  }, 480);
-}
-
-function navigate(dir) {
-  goToSlide(currentSlide + dir);
-}
-
-// Keyboard navigation
-document.addEventListener('keydown', (e) => {
-  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); navigate(1); }
-  if (e.key === 'ArrowLeft') { e.preventDefault(); navigate(-1); }
-  if (e.key === 'Home') { e.preventDefault(); goToSlide(0); }
-  if (e.key === 'End') { e.preventDefault(); goToSlide(totalSlides - 1); }
-});
-
-// Touch/swipe support
-let touchStartX = 0;
-document.addEventListener('touchstart', (e) => { touchStartX = e.touches[0].clientX; });
-document.addEventListener('touchend', (e) => {
-  const diff = touchStartX - e.changedTouches[0].clientX;
-  if (Math.abs(diff) > 50) { navigate(diff > 0 ? 1 : -1); }
-});
-
-// Tab filter
+// Tab filter (must be global for inline onclick)
 function showTab(tool, btn) {
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
   btn.classList.add('active');
-  document.querySelectorAll('.usecase-card').forEach(card => {
+  document.querySelectorAll('.usecase-card').forEach(function(card) {
     card.style.display = (tool === 'all' || card.dataset.tool === tool) ? '' : 'none';
   });
 }
-
-updateUI();
 </script>
 
 </body>
