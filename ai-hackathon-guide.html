@@ -1106,41 +1106,14 @@
       <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;margin-top:2rem;text-align:center;">
         <div style="font-size:0.92rem;color:var(--text-muted);line-height:1.7;max-width:700px;margin:0 auto;"><strong style="color:var(--text);">Detta &auml;r delegering i praktiken.</strong> Du beskriver vad du vill se, Claude g&ouml;r allt skapararbete &mdash; utan att du beh&ouml;ver kunna HTML eller JavaScript.</div>
         <div style="margin-top:1.25rem;display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
-          <a href="gaston-dashboard.html" target="_blank" style="display:inline-flex;align-items:center;gap:8px;padding:10px 22px;border-radius:100px;border:1px solid var(--accent-orange);background:var(--accent-orange-soft);color:var(--accent-orange);font-size:0.88rem;font-weight:600;text-decoration:none;transition:all 0.2s;">&#128202; &Ouml;ppna Dashboard (ljust tema)</a>
-          <a href="gaston-dashboard-dark.html" target="_blank" style="display:inline-flex;align-items:center;gap:8px;padding:10px 22px;border-radius:100px;border:1px solid var(--accent-purple);background:var(--accent-purple-soft);color:var(--accent-purple);font-size:0.88rem;font-weight:600;text-decoration:none;transition:all 0.2s;">&#127769; &Ouml;ppna Dashboard (m&ouml;rkt tema)</a>
+          <a href="gaston-dashboard-dark.html" target="_blank" style="display:inline-flex;align-items:center;gap:8px;padding:10px 22px;border-radius:100px;border:1px solid var(--accent-purple);background:var(--accent-purple-soft);color:var(--accent-purple);font-size:0.88rem;font-weight:600;text-decoration:none;transition:all 0.2s;">&#128202; &Ouml;ppna Dashboard</a>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- ====== SLIDE 9: USE CASES ====== -->
+  <!-- ====== SLIDE 9: WORKSHOP ====== -->
   <div class="slide" data-slide="9">
-    <div class="slide-inner">
-      <div class="section-label">I praktiken</div>
-      <h2>Vad kan du l&ouml;sa?</h2>
-      <p class="section-desc">Konkreta exempel p&aring; hur olika roller kan anv&auml;nda verktygen.</p>
-      <div class="tabs">
-        <button class="tab-btn active" onclick="showTab('all', this)">Alla</button>
-        <button class="tab-btn" onclick="showTab('chat', this)">Chat &amp; Projects</button>
-        <button class="tab-btn" onclick="showTab('cowork', this)">Cowork</button>
-        <button class="tab-btn" onclick="showTab('code', this)">Code</button>
-      </div>
-      <div class="usecase-grid">
-        <div class="usecase-card" data-tool="chat"><div class="usecase-role" style="background:var(--accent-blue-soft);color:var(--accent-blue);">Chat / Projects</div><h4>Leverant&ouml;rsanalys</h4><p>Ladda upp leverant&ouml;rsavtal och be Claude j&auml;mf&ouml;ra villkor, identifiera f&ouml;rhandlingsutrymme.</p></div>
-        <div class="usecase-card" data-tool="chat"><div class="usecase-role" style="background:var(--accent-blue-soft);color:var(--accent-blue);">Chat / Projects</div><h4>Kampanjtexter</h4><p>Skapa och iterera p&aring; kampanjtexter, produktbeskrivningar och s&auml;songskommunikation.</p></div>
-        <div class="usecase-card" data-tool="chat"><div class="usecase-role" style="background:var(--accent-green-soft);color:var(--accent-green);">Projects</div><h4>Intern kunskapsbas</h4><p>Bygg ett Project med produktinfo, FAQ:er och returpolicys som teamet kan fr&aring;ga mot.</p></div>
-        <div class="usecase-card" data-tool="cowork"><div class="usecase-role" style="background:var(--accent-orange-soft);color:var(--accent-orange);">Cowork</div><h4>F&ouml;rs&auml;ljningsdashboard</h4><p>Peka Cowork mot data och f&aring; interaktiva dashboards, Excel-rapporter eller presentationer.</p></div>
-        <div class="usecase-card" data-tool="cowork"><div class="usecase-role" style="background:var(--accent-orange-soft);color:var(--accent-orange);">Cowork</div><h4>Omv&auml;rldsbevakning</h4><p>L&aring;t Claude s&ouml;ka webben efter konkurrentpriser, lanseringar och trender.</p></div>
-        <div class="usecase-card" data-tool="cowork"><div class="usecase-role" style="background:var(--accent-orange-soft);color:var(--accent-orange);">Cowork</div><h4>Lageranalys</h4><p>Analysera lagerniv&aring;er, identifiera &ouml;verstock och skapa beslutsunderlag som Excel-fil.</p></div>
-        <div class="usecase-card" data-tool="code"><div class="usecase-role" style="background:var(--accent-purple-soft);color:var(--accent-purple);">Code</div><h4>Automatisk trendagent</h4><p>Bygg en agent som h&auml;mtar data, analyserar f&ouml;rs&auml;ljningstrender och genererar en sammanfattning.</p></div>
-        <div class="usecase-card" data-tool="code"><div class="usecase-role" style="background:var(--accent-purple-soft);color:var(--accent-purple);">Code</div><h4>Sortimentschatbot</h4><p>Bygg en intern chatbot kopplad mot produktdatabasen f&ouml;r sortimentsfr&aring;gor.</p></div>
-        <div class="usecase-card" data-tool="code"><div class="usecase-role" style="background:var(--accent-purple-soft);color:var(--accent-purple);">Code</div><h4>Datapipeline</h4><p>Bygg en pipeline som automatiskt transformerar r&aring;data till insikter.</p></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ====== SLIDE 10: WORKSHOP ====== -->
-  <div class="slide" data-slide="10">
     <div class="slide-inner">
       <div class="section-label">Uppl&auml;gg</div>
       <h2>2 timmar. Fritt utforskande.</h2>
@@ -1148,18 +1121,24 @@
       <div class="timeline">
         <div class="timeline-item">
           <div class="timeline-dot">1</div>
-          <div class="timeline-time">0:00 &mdash; 0:15 (15 min)</div>
+          <div class="timeline-time">0:00 &mdash; 0:10 (10 min)</div>
           <h4>Kick-off &amp; mindset</h4>
           <p>Kort intro om paradigmskiftena: varf&ouml;r vi &auml;r h&auml;r, vad som &auml;r m&ouml;jligt. Snabb demo av Chat vs. Cowork f&ouml;r att visa skillnaden.</p>
         </div>
         <div class="timeline-item">
           <div class="timeline-dot">2</div>
-          <div class="timeline-time">0:15 &mdash; 1:40 (85 min)</div>
+          <div class="timeline-time">0:10 &mdash; 0:20 (10 min)</div>
+          <h4>Setup &amp; MCP-koppling</h4>
+          <p>Alla loggar in p&aring; Claude och kopplar Supabase MCP till Claude Desktop. Christian visar steg-f&ouml;r-steg, Simon hj&auml;lper med teknik.</p>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot">3</div>
+          <div class="timeline-time">0:20 &mdash; 1:40 (80 min)</div>
           <h4>Utforska &amp; experimentera</h4>
           <p>V&auml;lj ett verktyg som k&auml;nns r&auml;tt. Jobba ensam eller i par. Utg&aring; fr&aring;n ett problem du k&auml;nner igen, eller v&auml;lj en utmaning.</p>
         </div>
         <div class="timeline-item">
-          <div class="timeline-dot">3</div>
+          <div class="timeline-dot">4</div>
           <div class="timeline-time">1:40 &mdash; 2:00 (20 min)</div>
           <h4>Show &amp; tell</h4>
           <p>Kort runda d&auml;r den som vill visar vad de hittade. Det mest v&auml;rdefulla &auml;r ofta insikterna, inte leverablerna.</p>
@@ -1168,29 +1147,43 @@
       <div class="callout">
         <h3>Det finns inget &rdquo;r&auml;tt&rdquo; s&auml;tt</h3>
         <p>Du beh&ouml;ver inte kunna koda. Du beh&ouml;ver inte ha en plan. Det enda vi ber dig om &auml;r att prova n&aring;got du inte gjort f&ouml;rut.</p>
+        <p style="margin-top:1rem;color:var(--accent-orange);font-weight:600;">Christian och Simon finns i rummet hela tiden f&ouml;r att hj&auml;lpa dig komma ig&aring;ng, fels&ouml;ka och utforska vidare.</p>
       </div>
     </div>
   </div>
 
-  <!-- ====== SLIDE 11: CHALLENGES ====== -->
-  <div class="slide" data-slide="11">
+  <!-- ====== SLIDE 10: USE CASES ====== -->
+  <div class="slide" data-slide="10">
     <div class="slide-inner">
-      <div class="section-label">Inspiration</div>
-      <h2>Beh&ouml;ver du en startpunkt?</h2>
-      <p class="section-desc">V&auml;lj en utmaning, eller ta med ett eget problem fr&aring;n din vardag.</p>
-      <div class="challenges-grid">
-        <div class="challenge-card"><div class="challenge-emoji">&#128269;</div><h4>Omv&auml;rldsbevakning</h4><p>Samla in och sammanfatta nyheter, prisf&ouml;r&auml;ndringar och trender fr&aring;n konkurrenter.</p></div>
-        <div class="challenge-card"><div class="challenge-emoji">&#128202;</div><h4>F&ouml;rs&auml;ljningsanalys</h4><p>Hitta anomalier, trender och insikter i datan.</p></div>
-        <div class="challenge-card"><div class="challenge-emoji">&#129302;</div><h4>Intern chatbot</h4><p>Skapa en kunskapsbas som svarar p&aring; sortiment och lagerniv&aring;er.</p></div>
-        <div class="challenge-card"><div class="challenge-emoji">&#128230;</div><h4>Lageroptimering</h4><p>Analysera lager och efterfr&aring;gem&ouml;nster f&ouml;r att hitta &ouml;verstock.</p></div>
-        <div class="challenge-card"><div class="challenge-emoji">&#9997;&#65039;</div><h4>Kampanjgenerering</h4><p>Personaliserade kampanjtexter f&ouml;r olika kundsegment.</p></div>
-        <div class="challenge-card"><div class="challenge-emoji">&#128200;</div><h4>Priss&auml;ttningsanalys</h4><p>J&auml;mf&ouml;r priser mot konkurrenters och ta fram rekommendationer.</p></div>
+      <div class="section-label">I praktiken</div>
+      <h2>Vad kan du l&ouml;sa?</h2>
+      <p class="section-desc">Konkreta exempel p&aring; hur olika roller kan anv&auml;nda verktygen. V&auml;lj n&aring;got som k&auml;nns relevant &mdash; eller ta med ett eget problem.</p>
+      <div class="tabs">
+        <button class="tab-btn active" onclick="showTab('all', this)">Alla</button>
+        <button class="tab-btn" onclick="showTab('chat', this)">Chat &amp; Projects</button>
+        <button class="tab-btn" onclick="showTab('cowork', this)">Cowork</button>
+        <button class="tab-btn" onclick="showTab('code', this)">Code</button>
+      </div>
+      <div class="usecase-grid">
+        <div class="usecase-card" data-tool="chat"><div class="usecase-role" style="background:var(--accent-blue-soft);color:var(--accent-blue);">Chat / Projects</div><h4>Leverant&ouml;rsanalys</h4><p>Ladda upp leverant&ouml;rsavtal och be Claude j&auml;mf&ouml;ra villkor, identifiera f&ouml;rhandlingsutrymme.</p></div>
+        <div class="usecase-card" data-tool="chat"><div class="usecase-role" style="background:var(--accent-blue-soft);color:var(--accent-blue);">Chat / Projects</div><h4>Kampanjtexter</h4><p>Skapa och iterera p&aring; kampanjtexter, produktbeskrivningar och s&auml;songskommunikation f&ouml;r olika kundsegment.</p></div>
+        <div class="usecase-card" data-tool="chat"><div class="usecase-role" style="background:var(--accent-blue-soft);color:var(--accent-blue);">Chat / Projects</div><h4>M&ouml;tesf&ouml;rberedelse</h4><p>F&ouml;rbered leverant&ouml;rsm&ouml;ten: nyckelpunkter, anticiperade fr&aring;gor och agenda p&aring; n&aring;gra minuter.</p></div>
+        <div class="usecase-card" data-tool="chat"><div class="usecase-role" style="background:var(--accent-green-soft);color:var(--accent-green);">Projects</div><h4>Intern kunskapsbas</h4><p>Bygg ett Project med produktinfo, FAQ:er och returpolicys som teamet kan fr&aring;ga mot.</p></div>
+        <div class="usecase-card" data-tool="cowork"><div class="usecase-role" style="background:var(--accent-orange-soft);color:var(--accent-orange);">Cowork</div><h4>F&ouml;rs&auml;ljningsanalys</h4><p>Hitta anomalier, trender och insikter i Gaston-datan &mdash; med tabeller och diagram.</p></div>
+        <div class="usecase-card" data-tool="cowork"><div class="usecase-role" style="background:var(--accent-orange-soft);color:var(--accent-orange);">Cowork</div><h4>Omv&auml;rldsbevakning</h4><p>L&aring;t Claude s&ouml;ka webben efter konkurrentpriser, lanseringar och trender.</p></div>
+        <div class="usecase-card" data-tool="cowork"><div class="usecase-role" style="background:var(--accent-orange-soft);color:var(--accent-orange);">Cowork</div><h4>Lageranalys</h4><p>Analysera lagerniv&aring;er, identifiera &ouml;verstock och ber&auml;kna &rdquo;days of supply&rdquo; f&ouml;r att hitta risker.</p></div>
+        <div class="usecase-card" data-tool="cowork"><div class="usecase-role" style="background:var(--accent-orange-soft);color:var(--accent-orange);">Cowork</div><h4>Priss&auml;ttningsanalys</h4><p>J&auml;mf&ouml;r priser mot konkurrenters och ta fram rekommendationer.</p></div>
+        <div class="usecase-card" data-tool="cowork"><div class="usecase-role" style="background:var(--accent-orange-soft);color:var(--accent-orange);">Cowork</div><h4>Leverant&ouml;rs-fact-pack</h4><p>Skapa ett underlag inf&ouml;r leverant&ouml;rsm&ouml;te: f&ouml;rs&auml;ljning, ranking, marginaler och topps&auml;ljare.</p></div>
+        <div class="usecase-card" data-tool="cowork"><div class="usecase-role" style="background:var(--accent-orange-soft);color:var(--accent-orange);">Cowork</div><h4>Morgonbriefing</h4><p>Prototypa en daglig sammanfattning: g&aring;rdagens f&ouml;rs&auml;ljning, slut-i-lager och rekommenderade &aring;tg&auml;rder.</p></div>
+        <div class="usecase-card" data-tool="code"><div class="usecase-role" style="background:var(--accent-purple-soft);color:var(--accent-purple);">Code</div><h4>Automatisk trendagent</h4><p>Bygg en agent som h&auml;mtar data, analyserar f&ouml;rs&auml;ljningstrender och genererar en sammanfattning.</p></div>
+        <div class="usecase-card" data-tool="code"><div class="usecase-role" style="background:var(--accent-purple-soft);color:var(--accent-purple);">Code</div><h4>Sortimentschatbot</h4><p>Bygg en intern chatbot kopplad mot produktdatabasen f&ouml;r sortimentsfr&aring;gor.</p></div>
+        <div class="usecase-card" data-tool="code"><div class="usecase-role" style="background:var(--accent-purple-soft);color:var(--accent-purple);">Code</div><h4>Datapipeline</h4><p>Bygg en pipeline som automatiskt transformerar r&aring;data till insikter.</p></div>
       </div>
     </div>
   </div>
 
-  <!-- ====== SLIDE 12: FÖRBEREDELSER ====== -->
-  <div class="slide" data-slide="12">
+  <!-- ====== SLIDE 11: FÖRBEREDELSER ====== -->
+  <div class="slide" data-slide="11">
     <div class="slide-inner">
       <div class="section-label">F&ouml;rberedelser</div>
       <h2>Vad beh&ouml;ver vi g&ouml;ra innan?</h2>
@@ -1256,150 +1249,6 @@
 
 </div>
 
-
-<!-- ===== NAVIGATION BAR ===== -->
-<div class="nav-bar">
-  <button class="nav-btn" id="prevBtn" disabled>
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-    <span>Tillbaka</span>
-  </button>
-
-  <div class="nav-center">
-    <div class="progress-dots" id="progressDots"></div>
-    <div class="slide-counter" id="slideCounter">1 / 14</div>
-  </div>
-
-  <button class="nav-btn" id="nextBtn">
-    <span>N&auml;sta</span>
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-  </button>
-</div>
-
-<!-- ===== KEYBOARD HINT ===== -->
-<div class="kbd-hint">
-  <span class="kbd">&larr;</span>
-  <span class="kbd">&rarr;</span>
-  navigera
-</div>
-
-<script>
-(function() {
-  const slides = document.querySelectorAll('.slide');
-  const totalSlides = slides.length;
-  let currentSlide = 0;
-  let animTimer = null;
-
-  const prevBtn = document.getElementById('prevBtn');
-  const nextBtn = document.getElementById('nextBtn');
-  const counter = document.getElementById('slideCounter');
-  const dotsContainer = document.getElementById('progressDots');
-
-  // Build progress dots
-  for (let i = 0; i < totalSlides; i++) {
-    const dot = document.createElement('div');
-    dot.className = 'progress-dot' + (i === 0 ? ' active' : '');
-    dot.addEventListener('click', function(e) {
-      e.preventDefault();
-      e.stopPropagation();
-      goToSlide(i);
-    });
-    dotsContainer.appendChild(dot);
-  }
-
-  function updateUI() {
-    prevBtn.disabled = (currentSlide === 0);
-    nextBtn.disabled = (currentSlide === totalSlides - 1);
-    counter.textContent = (currentSlide + 1) + ' / ' + totalSlides;
-    const dots = dotsContainer.querySelectorAll('.progress-dot');
-    for (let i = 0; i < dots.length; i++) {
-      dots[i].className = 'progress-dot' + (i === currentSlide ? ' active' : '');
-    }
-  }
-
-  function goToSlide(target) {
-    if (target === currentSlide || target < 0 || target >= totalSlides) return;
-
-    // Clear any pending animation
-    if (animTimer) { clearTimeout(animTimer); animTimer = null; }
-
-    const direction = target > currentSlide ? 1 : -1;
-    const oldSlide = slides[currentSlide];
-    const newSlide = slides[target];
-
-    // Immediately hide old slide
-    oldSlide.classList.remove('active', 'exit-left');
-    oldSlide.style.transition = 'none';
-    oldSlide.style.opacity = '0';
-    oldSlide.style.transform = direction > 0 ? 'translateX(-60px)' : 'translateX(60px)';
-
-    // Prepare new slide at start position (no transition)
-    newSlide.style.transition = 'none';
-    newSlide.style.opacity = '0';
-    newSlide.style.transform = direction > 0 ? 'translateX(60px)' : 'translateX(-60px)';
-    newSlide.classList.add('active');
-
-    // Force reflow
-    void newSlide.offsetWidth;
-
-    // Animate new slide in
-    newSlide.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
-    newSlide.style.opacity = '1';
-    newSlide.style.transform = 'translateX(0)';
-    newSlide.scrollTop = 0;
-
-    currentSlide = target;
-    updateUI();
-
-    // Clean up old slide after animation
-    animTimer = setTimeout(function() {
-      oldSlide.style.transition = '';
-      oldSlide.style.opacity = '';
-      oldSlide.style.transform = '';
-      animTimer = null;
-    }, 450);
-  }
-
-  // Navigation buttons
-  prevBtn.addEventListener('click', function(e) {
-    e.preventDefault();
-    goToSlide(currentSlide - 1);
-  });
-  nextBtn.addEventListener('click', function(e) {
-    e.preventDefault();
-    goToSlide(currentSlide + 1);
-  });
-
-  // Keyboard navigation
-  document.addEventListener('keydown', function(e) {
-    if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); goToSlide(currentSlide + 1); }
-    if (e.key === 'ArrowLeft') { e.preventDefault(); goToSlide(currentSlide - 1); }
-    if (e.key === 'Home') { e.preventDefault(); goToSlide(0); }
-    if (e.key === 'End') { e.preventDefault(); goToSlide(totalSlides - 1); }
-  });
-
-  // Touch/swipe support
-  let touchStartX = 0;
-  document.addEventListener('touchstart', function(e) { touchStartX = e.touches[0].clientX; });
-  document.addEventListener('touchend', function(e) {
-    const diff = touchStartX - e.changedTouches[0].clientX;
-    if (Math.abs(diff) > 50) { goToSlide(currentSlide + (diff > 0 ? 1 : -1)); }
-  });
-
-  updateUI();
-})();
-
-// Tab filter (must be global for inline onclick)
-function showTab(tool, btn) {
-  document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
-  btn.classList.add('active');
-  document.querySelectorAll('.usecase-card').forEach(function(card) {
-    card.style.display = (tool === 'all' || card.dataset.tool === tool) ? '' : 'none';
-  });
-}
-</script>
-
-</body>
-</html>
 
 <!-- ===== NAVIGATION BAR ===== -->
 <div class="nav-bar">
