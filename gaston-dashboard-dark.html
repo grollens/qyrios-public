@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gaston — Försäljningsdashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1" integrity="sha384-jb8JQMbMoBUzgWatfe6COACi2ljcDdZQ2OxczGA3bGNeWe+6DChMTBJemed7ZnvJ" crossorigin="anonymous"></script>
+    <style>
+        :root {
+            --bg: #141833;
+            --surface: #1c2148;
+            --surface-hover: #242a55;
+            --border: #2e3563;
+            --text: #f0eff5;
+            --text-muted: #9a98b8;
+            --accent-orange: #eda090;
+            --accent-blue: #7ba4d9;
+            --accent-green: #6dc9a0;
+            --accent-purple: #b094e0;
+            --accent-pink: #e88fa0;
+            --radius: 12px;
+            --gap: 16px;
+            --positive: #6dc9a0;
+            --negative: #e88fa0;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.5;
+            min-height: 100vh;
+        }
+
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: var(--gap);
+        }
+
+        .dashboard-header {
+            background: linear-gradient(135deg, var(--surface), rgba(237,160,144,0.08));
+            border: 1px solid var(--border);
+            padding: 20px 28px;
+            border-radius: var(--radius);
+            margin-bottom: var(--gap);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .dashboard-header h1 {
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+        .dashboard-header h1 span { color: var(--accent-orange); }
+
+        .header-meta {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 12px;
+            border-radius: 100px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+        .badge-live { background: rgba(109,201,160,0.15); color: var(--accent-green); }
+
+        .filters {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .filter-group select {
+            padding: 7px 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--surface);
+            color: var(--text);
+            font-size: 13px;
+            font-family: inherit;
+            cursor: pointer;
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%239a98b8' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            padding-right: 28px;
+        }
+        .filter-group select:hover { border-color: var(--accent-orange); }
+        .filter-group select option { background: var(--surface); }
+
+        .filter-group label {
+            font-size: 11px;
+            color: var(--text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        /* KPI Row */
+        .kpi-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: var(--gap);
+            margin-bottom: var(--gap);
+        }
+
+        .kpi-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px 24px;
+            transition: border-color 0.2s;
+        }
+        .kpi-card:hover { border-color: var(--accent-orange); }
+
+        .kpi-label {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .kpi-value {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 4px;
+            letter-spacing: -0.02em;
+        }
+
+        .kpi-sub {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .kpi-change {
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .kpi-change.positive { color: var(--positive); }
+        .kpi-change.negative { color: var(--negative); }
+
+        /* Chart Row */
+        .chart-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: var(--gap);
+            margin-bottom: var(--gap);
+        }
+
+        .chart-row-equal {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--gap);
+            margin-bottom: var(--gap);
+        }
+
+        .chart-row-full {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--gap);
+            margin-bottom: var(--gap);
+        }
+
+        .chart-row-three {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--gap);
+            margin-bottom: var(--gap);
+        }
+
+        .chart-container {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px 24px;
+        }
+
+        .chart-container h3 {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            margin-bottom: 16px;
+        }
+
+        .chart-container canvas {
+            max-height: 280px;
+        }
+
+        .chart-container.tall canvas {
+            max-height: 360px;
+        }
+
+        /* Data Table */
+        .table-section {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px 24px;
+            overflow-x: auto;
+            margin-bottom: var(--gap);
+        }
+
+        .table-section h3 {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            margin-bottom: 16px;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        .data-table thead th {
+            text-align: left;
+            padding: 10px 14px;
+            border-bottom: 2px solid var(--border);
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            white-space: nowrap;
+            user-select: none;
+            cursor: pointer;
+        }
+        .data-table thead th:hover { color: var(--text); }
+
+        .data-table tbody td {
+            padding: 10px 14px;
+            border-bottom: 1px solid rgba(46,53,99,0.5);
+            color: var(--text-muted);
+        }
+
+        .data-table tbody tr:hover td {
+            background: var(--surface-hover);
+            color: var(--text);
+        }
+
+        .data-table tbody tr:last-child td { border-bottom: none; }
+
+        .num { text-align: right; font-variant-numeric: tabular-nums; }
+
+        /* Footer */
+        .dashboard-footer {
+            text-align: center;
+            padding: 16px;
+            font-size: 12px;
+            color: var(--text-muted);
+            opacity: 0.6;
+        }
+        .dashboard-footer a { color: var(--accent-orange); text-decoration: none; }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .chart-row, .chart-row-equal, .chart-row-three { grid-template-columns: 1fr; }
+            .kpi-row { grid-template-columns: repeat(2, 1fr); }
+            .dashboard-header { flex-direction: column; align-items: flex-start; }
+        }
+
+        @media print {
+            body { background: white; color: #222; }
+            .kpi-card, .chart-container, .table-section { border: 1px solid #ddd; box-shadow: none; }
+            .filters { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="dashboard-container">
+    <div class="dashboard-header">
+        <div>
+            <h1>&#x1F43E; <span>Gaston</span> Forsaljningsdashboard</h1>
+        </div>
+        <div class="header-meta">
+            <span class="badge badge-live">&#x25CF; Live-data</span>
+            <span>Data t.o.m. 18 feb 2026 &middot; Kalla: Shopify via Supabase</span>
+        </div>
+    </div>
+
+    <!-- KPI Row -->
+    <section class="kpi-row">
+        <div class="kpi-card">
+            <div class="kpi-label">Total omsattning</div>
+            <div class="kpi-value">30,9 Mkr</div>
+            <div class="kpi-sub">Maj 2024 &ndash; Feb 2026</div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-label">Antal ordrar</div>
+            <div class="kpi-value">80 551</div>
+            <div class="kpi-sub">Exkl. annullerade</div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-label">Snittordervarde</div>
+            <div class="kpi-value">383 kr</div>
+            <div class="kpi-sub">Genomsnitt per order</div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-label">Unika kunder</div>
+            <div class="kpi-value">46 406</div>
+            <div class="kpi-sub">Anonymiserade</div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-label">Betalda ordrar</div>
+            <div class="kpi-value">98,4%</div>
+            <div class="kpi-sub">79 269 av 80 551</div>
+        </div>
+    </section>
+
+    <!-- Monthly Revenue Chart -->
+    <section class="chart-row-full">
+        <div class="chart-container tall">
+            <h3>Manatlig omsattning & antal ordrar</h3>
+            <canvas id="monthlyChart"></canvas>
+        </div>
+    </section>
+
+    <!-- Category + Weekly -->
+    <section class="chart-row">
+        <div class="chart-container">
+            <h3>Omsattning per produktkategori</h3>
+            <canvas id="categoryChart"></canvas>
+        </div>
+        <div class="chart-container">
+            <h3>Senaste 12 veckorna &mdash; omsattning</h3>
+            <canvas id="weeklyChart"></canvas>
+        </div>
+    </section>
+
+    <!-- Weekday + Locations + Financial -->
+    <section class="chart-row-three">
+        <div class="chart-container">
+            <h3>Ordrar per veckodag</h3>
+            <canvas id="weekdayChart"></canvas>
+        </div>
+        <div class="chart-container">
+            <h3>Lager per plats (artiklar i lager)</h3>
+            <canvas id="locationChart"></canvas>
+        </div>
+        <div class="chart-container">
+            <h3>Betalningsstatus</h3>
+            <canvas id="financialChart"></canvas>
+        </div>
+    </section>
+
+    <!-- Top Products Table -->
+    <section class="table-section">
+        <h3>Topp 15 produkter &mdash; omsattning</h3>
+        <table class="data-table" id="productTable">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Produkt</th>
+                    <th class="num">Ordrar</th>
+                    <th class="num">Salda enheter</th>
+                    <th class="num">Omsattning (SEK)</th>
+                </tr>
+            </thead>
+            <tbody id="productTableBody"></tbody>
+        </table>
+    </section>
+
+    <footer class="dashboard-footer">
+        Gaston Forsaljningsdashboard &middot; Genererad 18 feb 2026 &middot; Kalla: Gaston / Shopify via Supabase
+    </footer>
+
+</div>
+
+<script>
+const COLORS = ['#eda090','#7ba4d9','#6dc9a0','#b094e0','#e88fa0','#f0c8b8','#937860','#DA8BC3','#8C8C8C','#CCB974'];
+
+function fmtSEK(v) {
+    if (v >= 1e6) return (v/1e6).toFixed(1).replace('.',',') + ' Mkr';
+    if (v >= 1e3) return Math.round(v/1e3) + ' k';
+    return Math.round(v).toLocaleString('sv-SE');
+}
+function fmtNum(v) { return v.toLocaleString('sv-SE'); }
+
+// === RIKTIG GASTON-DATA (Shopify via Supabase, 2024-02 till 2026-02) ===
+
+const monthlyData = [
+    {month:'2024-05',orders:36,revenue:22109,aov:614,discounts:0},
+    {month:'2024-06',orders:134,revenue:35240,aov:263,discounts:14077},
+    {month:'2024-08',orders:44,revenue:8275,aov:188,discounts:62},
+    {month:'2024-09',orders:133,revenue:6814,aov:51,discounts:14625},
+    {month:'2024-10',orders:1057,revenue:812963,aov:769,discounts:136670},
+    {month:'2024-11',orders:1693,revenue:1375030,aov:812,discounts:177883},
+    {month:'2024-12',orders:187,revenue:109571,aov:586,discounts:2158},
+    {month:'2025-01',orders:1509,revenue:430827,aov:286,discounts:91589},
+    {month:'2025-02',orders:2711,revenue:725110,aov:267,discounts:80683},
+    {month:'2025-03',orders:2512,revenue:668011,aov:266,discounts:70385},
+    {month:'2025-04',orders:2563,revenue:746688,aov:291,discounts:220516},
+    {month:'2025-05',orders:2263,revenue:703609,aov:311,discounts:125321},
+    {month:'2025-06',orders:5060,revenue:1582749,aov:313,discounts:214359},
+    {month:'2025-07',orders:5725,revenue:1735307,aov:303,discounts:119302},
+    {month:'2025-08',orders:6057,revenue:2029663,aov:335,discounts:128236},
+    {month:'2025-09',orders:7082,revenue:2720515,aov:384,discounts:232645},
+    {month:'2025-10',orders:8066,revenue:2875075,aov:356,discounts:241688},
+    {month:'2025-11',orders:9491,revenue:4272790,aov:450,discounts:352203},
+    {month:'2025-12',orders:10016,revenue:3552470,aov:355,discounts:338116},
+    {month:'2026-01',orders:8920,revenue:3942285,aov:442,discounts:326360},
+    {month:'2026-02',orders:5290,revenue:2527876,aov:478,discounts:209086}
+];
+
+const topProducts = [
+    {product:'Ever Clean Fresh Lavender',orders:1704,units:2759,revenue:639037},
+    {product:'Monster Dog GF Singles Lamb',orders:486,units:555,revenue:547941},
+    {product:'Monster Dog Original Sensitive White Fish',orders:493,units:539,revenue:508408},
+    {product:'Royal Canin Sterilised',orders:708,units:774,revenue:434723},
+    {product:'Ever Clean Extra Strong Unscented',orders:924,units:1338,revenue:327354},
+    {product:'Ever Clean Multiple Cat 10L',orders:719,units:1238,revenue:291352},
+    {product:'Monster Dog GF Adult Red Meat',orders:330,units:360,revenue:269603},
+    {product:'Purina Pro Plan Medium Sensitive Lamm',orders:357,units:456,revenue:265187},
+    {product:'Kloklippning',orders:1368,units:1520,revenue:241680},
+    {product:'Ever Clean Litterfree Paws 10L',orders:657,units:1034,revenue:239136},
+    {product:'Purina Pro Plan Medium Sensitive Lax',orders:278,units:379,revenue:228983},
+    {product:'Royal Canin Medium Adult',orders:262,units:317,revenue:213402},
+    {product:'Monster Dog GF Wild Ocean',orders:249,units:270,revenue:211215},
+    {product:'Monster Dog GF Singles Lamb Small',orders:345,units:387,revenue:204660},
+    {product:'Bozita Indoor & Sterilised Chicken',orders:531,units:572,revenue:195810}
+];
+
+const weeklyData = [
+    {week:'v49',revenue:674582},{week:'v50',revenue:699771},
+    {week:'v51',revenue:986748},{week:'v52',revenue:784010},{week:'v1',revenue:798629},
+    {week:'v2',revenue:771892},{week:'v3',revenue:803933},{week:'v4',revenue:1107527},
+    {week:'v5',revenue:1014390},{week:'v6',revenue:995013},{week:'v7',revenue:1010156},
+    {week:'v8*',revenue:375980}
+];
+
+const weekdayData = [
+    {day:'Son',orders:8890,revenue:3982451},
+    {day:'Man',orders:10506,revenue:4024301},
+    {day:'Tis',orders:11481,revenue:4396780},
+    {day:'Ons',orders:10573,revenue:4299358},
+    {day:'Tor',orders:11292,revenue:4277188},
+    {day:'Fre',orders:14723,revenue:5268439},
+    {day:'Lor',orders:13086,revenue:4634626}
+];
+
+const categoryData = [
+    {cat:'Monster Torrfoder',revenue:3743635},
+    {cat:'Kampanj Royal Canin',revenue:2290591},
+    {cat:'Monster Hundgodis & Tugg',revenue:1778321},
+    {cat:'Kampanj RC Katt',revenue:1426450},
+    {cat:'Kampanj RC Hund',revenue:864141},
+    {cat:'Royal Canin Vatfoder',revenue:675434},
+    {cat:'2Pets Hundgodis',revenue:563160},
+    {cat:'Churu & Dashi Delight',revenue:250088},
+    {cat:'Monster Kattgodis',revenue:151188},
+    {cat:'Trixie Mat- & Vattensakar',revenue:148418}
+];
+
+const locationData = [
+    {location:'E-handel / Huvudlager',items:7479,available:62180},
+    {location:'Vasteras',items:7402,available:24377},
+    {location:'Norrkoping',items:6880,available:22751},
+    {location:'Uppsala',items:6932,available:7953},
+    {location:'Saffle',items:1845,available:7283}
+];
+
+const financialData = [
+    {status:'Betald',count:79269,color:'#6dc9a0'},
+    {status:'Del-aterbetald',count:771,color:'#f0c8b8'},
+    {status:'Aterbetald',count:368,color:'#e88fa0'},
+    {status:'Vantande',count:138,color:'#9a98b8'},
+    {status:'Utgang./Void',count:5,color:'#2e3563'}
+];
+
+
+// === CHARTS ===
+
+// Monthly Revenue + Orders (combo)
+new Chart(document.getElementById('monthlyChart'), {
+    type: 'bar',
+    data: {
+        labels: monthlyData.map(d => d.month),
+        datasets: [
+            {
+                label: 'Omsattning (SEK)',
+                data: monthlyData.map(d => d.revenue),
+                backgroundColor: 'rgba(237,160,144,0.6)',
+                borderColor: '#eda090',
+                borderWidth: 1,
+                borderRadius: 4,
+                yAxisID: 'y',
+                order: 2
+            },
+            {
+                label: 'Rabatter (SEK)',
+                data: monthlyData.map(d => d.discounts),
+                backgroundColor: 'rgba(232,143,160,0.4)',
+                borderColor: '#e88fa0',
+                borderWidth: 1,
+                borderRadius: 4,
+                yAxisID: 'y',
+                order: 3
+            },
+            {
+                label: 'Antal ordrar',
+                data: monthlyData.map(d => d.orders),
+                type: 'line',
+                borderColor: '#7ba4d9',
+                backgroundColor: 'rgba(123,164,217,0.1)',
+                borderWidth: 2.5,
+                pointRadius: 3,
+                pointHoverRadius: 6,
+                tension: 0.3,
+                yAxisID: 'y1',
+                order: 1
+            }
+        ]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: { mode: 'index', intersect: false },
+        plugins: {
+            legend: { position: 'top', labels: { usePointStyle: true, padding: 20, color: '#9a98b8' } },
+            tooltip: {
+                backgroundColor: '#1c2148',
+                borderColor: '#2e3563',
+                borderWidth: 1,
+                titleColor: '#f0eff5',
+                bodyColor: '#9a98b8',
+                callbacks: {
+                    label: ctx => {
+                        if (ctx.dataset.yAxisID === 'y1') return ctx.dataset.label + ': ' + fmtNum(ctx.parsed.y);
+                        return ctx.dataset.label + ': ' + fmtSEK(ctx.parsed.y);
+                    }
+                }
+            }
+        },
+        scales: {
+            x: { grid: { display: false }, ticks: { color: '#9a98b8' } },
+            y: {
+                beginAtZero: true,
+                position: 'left',
+                ticks: { callback: v => fmtSEK(v), color: '#9a98b8' },
+                grid: { color: 'rgba(46,53,99,0.5)' }
+            },
+            y1: {
+                beginAtZero: true,
+                position: 'right',
+                grid: { drawOnChartArea: false },
+                ticks: { callback: v => fmtNum(v), color: '#9a98b8' }
+            }
+        }
+    }
+});
+
+// Category Doughnut
+new Chart(document.getElementById('categoryChart'), {
+    type: 'doughnut',
+    data: {
+        labels: categoryData.map(d => d.cat),
+        datasets: [{
+            data: categoryData.map(d => d.revenue),
+            backgroundColor: COLORS.map(c => c + 'CC'),
+            borderColor: '#1c2148',
+            borderWidth: 3
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        cutout: '55%',
+        plugins: {
+            legend: { position: 'right', labels: { usePointStyle: true, padding: 10, font: { size: 11 }, color: '#9a98b8' } },
+            tooltip: {
+                backgroundColor: '#1c2148',
+                borderColor: '#2e3563',
+                borderWidth: 1,
+                titleColor: '#f0eff5',
+                bodyColor: '#9a98b8',
+                callbacks: {
+                    label: ctx => {
+                        const total = ctx.dataset.data.reduce((a,b) => a+b, 0);
+                        const pct = ((ctx.parsed / total)*100).toFixed(1);
+                        return ctx.label + ': ' + fmtSEK(ctx.parsed) + ' (' + pct + '%)';
+                    }
+                }
+            }
+        }
+    }
+});
+
+// Weekly Bar
+new Chart(document.getElementById('weeklyChart'), {
+    type: 'bar',
+    data: {
+        labels: weeklyData.map(d => d.week),
+        datasets: [{
+            label: 'Omsattning',
+            data: weeklyData.map(d => d.revenue),
+            backgroundColor: weeklyData.map((d,i) => i === weeklyData.length-1 ? 'rgba(154,152,184,0.4)' : 'rgba(109,201,160,0.6)'),
+            borderColor: weeklyData.map((d,i) => i === weeklyData.length-1 ? '#9a98b8' : '#6dc9a0'),
+            borderWidth: 1,
+            borderRadius: 4
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: { display: false },
+            tooltip: {
+                backgroundColor: '#1c2148',
+                borderColor: '#2e3563',
+                borderWidth: 1,
+                titleColor: '#f0eff5',
+                bodyColor: '#9a98b8',
+                callbacks: { label: ctx => fmtSEK(ctx.parsed.y) }
+            }
+        },
+        scales: {
+            x: { grid: { display: false }, ticks: { color: '#9a98b8' } },
+            y: { beginAtZero: true, ticks: { callback: v => fmtSEK(v), color: '#9a98b8' }, grid: { color: 'rgba(46,53,99,0.5)' } }
+        }
+    }
+});
+
+// Weekday Bar
+new Chart(document.getElementById('weekdayChart'), {
+    type: 'bar',
+    data: {
+        labels: weekdayData.map(d => d.day),
+        datasets: [{
+            label: 'Ordrar',
+            data: weekdayData.map(d => d.orders),
+            backgroundColor: 'rgba(123,164,217,0.6)',
+            borderColor: '#7ba4d9',
+            borderWidth: 1,
+            borderRadius: 4
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: { display: false },
+            tooltip: {
+                backgroundColor: '#1c2148',
+                borderColor: '#2e3563',
+                borderWidth: 1,
+                callbacks: { label: ctx => fmtNum(ctx.parsed.y) + ' ordrar' }
+            }
+        },
+        scales: {
+            x: { grid: { display: false }, ticks: { color: '#9a98b8' } },
+            y: { beginAtZero: true, ticks: { color: '#9a98b8', callback: v => fmtNum(v) }, grid: { color: 'rgba(46,53,99,0.5)' } }
+        }
+    }
+});
+
+// Locations Bar
+new Chart(document.getElementById('locationChart'), {
+    type: 'bar',
+    data: {
+        labels: locationData.map(d => d.location),
+        datasets: [{
+            label: 'Artiklar i lager',
+            data: locationData.map(d => d.available),
+            backgroundColor: COLORS.slice(0,5).map(c => c + '99'),
+            borderColor: COLORS.slice(0,5),
+            borderWidth: 1,
+            borderRadius: 4
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: { display: false },
+            tooltip: {
+                backgroundColor: '#1c2148',
+                borderColor: '#2e3563',
+                borderWidth: 1,
+                callbacks: { label: ctx => fmtNum(ctx.parsed.y) + ' st' }
+            }
+        },
+        scales: {
+            x: { grid: { display: false }, ticks: { color: '#9a98b8', font: { size: 10 }, maxRotation: 30 } },
+            y: { beginAtZero: true, ticks: { color: '#9a98b8', callback: v => fmtNum(v) }, grid: { color: 'rgba(46,53,99,0.5)' } }
+        }
+    }
+});
+
+// Financial Doughnut
+new Chart(document.getElementById('financialChart'), {
+    type: 'doughnut',
+    data: {
+        labels: financialData.map(d => d.status),
+        datasets: [{
+            data: financialData.map(d => d.count),
+            backgroundColor: financialData.map(d => d.color),
+            borderColor: '#1c2148',
+            borderWidth: 3
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        cutout: '60%',
+        plugins: {
+            legend: { position: 'bottom', labels: { usePointStyle: true, padding: 12, color: '#9a98b8', font: { size: 11 } } },
+            tooltip: {
+                backgroundColor: '#1c2148',
+                borderColor: '#2e3563',
+                borderWidth: 1,
+                callbacks: { label: ctx => ctx.label + ': ' + fmtNum(ctx.parsed) + ' ordrar' }
+            }
+        }
+    }
+});
+
+// Top Products Table
+(function() {
+    const tbody = document.getElementById('productTableBody');
+    topProducts.forEach((p, i) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML =
+            '<td>' + (i+1) + '</td>' +
+            '<td>' + p.product + '</td>' +
+            '<td class="num">' + fmtNum(p.orders) + '</td>' +
+            '<td class="num">' + fmtNum(p.units) + '</td>' +
+            '<td class="num">' + fmtNum(p.revenue) + ' kr</td>';
+        tbody.appendChild(tr);
+    });
+})();
+</script>
+</body>
+</html>
