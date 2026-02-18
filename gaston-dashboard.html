@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gaston — Försäljningsdashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1" integrity="sha384-jb8JQMbMoBUzgWatfe6COACi2ljcDdZQ2OxczGA3bGNeWe+6DChMTBJemed7ZnvJ" crossorigin="anonymous"></script>
+    <style>
+        :root {
+            --bg: #141833;
+            --surface: #1c2148;
+            --surface-hover: #242a55;
+            --border: #2e3563;
+            --text: #f0eff5;
+            --text-muted: #9a98b8;
+            --accent-orange: #eda090;
+            --accent-blue: #7ba4d9;
+            --accent-green: #6dc9a0;
+            --accent-purple: #b094e0;
+            --accent-pink: #e88fa0;
+            --radius: 12px;
+            --gap: 16px;
+            --positive: #6dc9a0;
+            --negative: #e88fa0;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.5;
+            min-height: 100vh;
+        }
+
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: var(--gap);
+        }
+
+        .dashboard-header {
+            background: linear-gradient(135deg, var(--surface), rgba(237,160,144,0.08));
+            border: 1px solid var(--border);
+            padding: 20px 28px;
+            border-radius: var(--radius);
+            margin-bottom: var(--gap);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .dashboard-header h1 {
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+        .dashboard-header h1 span { color: var(--accent-orange); }
+
+        .header-meta {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 12px;
+            border-radius: 100px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+        .badge-live { background: rgba(109,201,160,0.15); color: var(--accent-green); }
+        .badge-demo { background: rgba(237,160,144,0.15); color: var(--accent-orange); }
+
+        .filters {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .filter-group select {
+            padding: 7px 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--surface);
+            color: var(--text);
+            font-size: 13px;
+            font-family: inherit;
+            cursor: pointer;
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%239a98b8' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            padding-right: 28px;
+        }
+        .filter-group select:hover { border-color: var(--accent-orange); }
+        .filter-group select option { background: var(--surface); }
+
+        .filter-group label {
+            font-size: 11px;
+            color: var(--text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        /* KPI Row */
+        .kpi-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: var(--gap);
+            margin-bottom: var(--gap);
+        }
+
+        .kpi-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px 24px;
+            transition: border-color 0.2s;
+        }
+        .kpi-card:hover { border-color: var(--accent-orange); }
+
+        .kpi-label {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .kpi-value {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 4px;
+            letter-spacing: -0.02em;
+        }
+
+        .kpi-change {
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .kpi-change.positive { color: var(--positive); }
+        .kpi-change.negative { color: var(--negative); }
+
+        /* Chart Row */
+        .chart-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: var(--gap);
+            margin-bottom: var(--gap);
+        }
+
+        .chart-row-equal {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--gap);
+            margin-bottom: var(--gap);
+        }
+
+        .chart-container {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px 24px;
+        }
+
+        .chart-container h3 {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            margin-bottom: 16px;
+        }
+
+        .chart-container canvas {
+            max-height: 280px;
+        }
+
+        /* Data Table */
+        .table-section {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px 24px;
+            overflow-x: auto;
+            margin-bottom: var(--gap);
+        }
+
+        .table-section h3 {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            margin-bottom: 16px;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        .data-table thead th {
+            text-align: left;
+            padding: 10px 14px;
+            border-bottom: 2px solid var(--border);
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            white-space: nowrap;
+            user-select: none;
+            cursor: pointer;
+        }
+        .data-table thead th:hover { color: var(--text); }
+
+        .data-table tbody td {
+            padding: 10px 14px;
+            border-bottom: 1px solid rgba(46,53,99,0.5);
+            color: var(--text-muted);
+        }
+
+        .data-table tbody tr:hover td {
+            background: var(--surface-hover);
+            color: var(--text);
+        }
+
+        .data-table tbody tr:last-child td { border-bottom: none; }
+
+        .status-tag {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        .status-high { background: rgba(109,201,160,0.15); color: var(--accent-green); }
+        .status-medium { background: rgba(123,164,217,0.15); color: var(--accent-blue); }
+        .status-low { background: rgba(237,160,144,0.15); color: var(--accent-orange); }
+        .status-critical { background: rgba(232,143,160,0.15); color: var(--accent-pink); }
+
+        /* Footer */
+        .dashboard-footer {
+            text-align: center;
+            padding: 16px;
+            font-size: 12px;
+            color: var(--text-muted);
+            opacity: 0.6;
+        }
+        .dashboard-footer a { color: var(--accent-orange); text-decoration: none; }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .chart-row, .chart-row-equal { grid-template-columns: 1fr; }
+            .kpi-row { grid-template-columns: repeat(2, 1fr); }
+            .dashboard-header { flex-direction: column; align-items: flex-start; }
+        }
+
+        @media print {
+            body { background: white; color: #222; }
+            .kpi-card, .chart-container, .table-section { border: 1px solid #ddd; box-shadow: none; }
+            .filters { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="dashboard-container">
+    <div class="dashboard-header">
+        <div>
+            <h1>📊 <span>Gaston</span> Försäljningsdashboard</h1>
+        </div>
+        <div class="header-meta">
+            <span class="badge badge-demo">Demo-data</span>
+            <div class="filters">
+                <div class="filter-group">
+                    <label>Period</label>
+                    <select id="filter-period" onchange="dashboard.applyFilters()">
+                        <option value="all">Alla månader</option>
+                        <option value="Q1">Q1 (Jan–Mar)</option>
+                        <option value="Q2">Q2 (Apr–Jun)</option>
+                        <option value="Q3">Q3 (Jul–Sep)</option>
+                        <option value="Q4">Q4 (Okt–Dec)</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Kategori</label>
+                    <select id="filter-category" onchange="dashboard.applyFilters()">
+                        <option value="all">Alla kategorier</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Lagerplats</label>
+                    <select id="filter-location" onchange="dashboard.applyFilters()">
+                        <option value="all">Alla lagerplatser</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section class="kpi-row">
+        <div class="kpi-card">
+            <div class="kpi-label">Total omsättning</div>
+            <div class="kpi-value" id="kpi-revenue">—</div>
+            <div class="kpi-change" id="kpi-revenue-change">—</div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-label">Antal ordrar</div>
+            <div class="kpi-value" id="kpi-orders">—</div>
+            <div class="kpi-change" id="kpi-orders-change">—</div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-label">Snittordervärde</div>
+            <div class="kpi-value" id="kpi-aov">—</div>
+            <div class="kpi-change" id="kpi-aov-change">—</div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-label">Unika kunder</div>
+            <div class="kpi-value" id="kpi-customers">—</div>
+            <div class="kpi-change" id="kpi-customers-change">—</div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-label">Returgrad</div>
+            <div class="kpi-value" id="kpi-returns">—</div>
+            <div class="kpi-change" id="kpi-returns-change">—</div>
+        </div>
+    </section>
+
+    <section class="chart-row">
+        <div class="chart-container">
+            <h3>Omsättning per månad</h3>
+            <canvas id="chart-revenue"></canvas>
+        </div>
+        <div class="chart-container">
+            <h3>Fördelning per kategori</h3>
+            <canvas id="chart-categories"></canvas>
+        </div>
+    </section>
+
+    <section class="chart-row-equal">
+        <div class="chart-container">
+            <h3>Top 10 produkter (omsättning)</h3>
+            <canvas id="chart-products"></canvas>
+        </div>
+        <div class="chart-container">
+            <h3>Ordrar per lagerplats</h3>
+            <canvas id="chart-locations"></canvas>
+        </div>
+    </section>
+
+    <section class="table-section">
+        <h3>Produktöversikt — Lager & försäljning</h3>
+        <div id="product-table"></div>
+    </section>
+
+    <footer class="dashboard-footer">
+        Genererad av Claude Cowork · Gaston AI Hackathon · <a href="https://grollens.github.io/qyrios-public/ai-hackathon-guide.html">Tillbaka till guiden</a>
+    </footer>
+</div>
+
+<script>
+// ===== GASTON DEMO DATA =====
+// Representativ data baserad på Gastons Supabase Datahouse-schema
+// (products, orders, order_line_items, inventory_levels, customers)
+
+const MONTHS = ['Jan','Feb','Mar','Apr','Maj','Jun','Jul','Aug','Sep','Okt','Nov','Dec'];
+const CATEGORIES = ['Kläder','Accessoarer','Skor','Väskor','Underkläder','Hemtextil'];
+const LOCATIONS = ['Lager Stockholm','Lager Göteborg','Butik Gaston 1','Butik Gaston 2','E-handel'];
+const COLORS = ['#eda090','#7ba4d9','#6dc9a0','#b094e0','#e88fa0','#f0c8b8'];
+
+// Monthly revenue data
+const MONTHLY_DATA = [
+    { month: 'Jan', revenue: 2840000, orders: 5420, customers: 3180, returns: 312 },
+    { month: 'Feb', revenue: 2650000, orders: 5180, customers: 2950, returns: 289 },
+    { month: 'Mar', revenue: 3120000, orders: 6240, customers: 3620, returns: 356 },
+    { month: 'Apr', revenue: 3450000, orders: 6890, customers: 3890, returns: 382 },
+    { month: 'Maj', revenue: 3890000, orders: 7560, customers: 4210, returns: 401 },
+    { month: 'Jun', revenue: 4210000, orders: 8120, customers: 4580, returns: 438 },
+    { month: 'Jul', revenue: 3560000, orders: 6980, customers: 3940, returns: 365 },
+    { month: 'Aug', revenue: 4580000, orders: 8940, customers: 5020, returns: 478 },
+    { month: 'Sep', revenue: 4120000, orders: 7890, customers: 4380, returns: 421 },
+    { month: 'Okt', revenue: 4890000, orders: 9280, customers: 5180, returns: 498 },
+    { month: 'Nov', revenue: 5640000, orders: 10420, customers: 5890, returns: 562 },
+    { month: 'Dec', revenue: 6280000, orders: 11870, customers: 6480, returns: 624 },
+];
+
+// Category breakdown
+const CATEGORY_DATA = [
+    { category: 'Kläder', revenue: 18200000, pct: 37.2, orders: 32400 },
+    { category: 'Accessoarer', revenue: 9800000, pct: 20.0, orders: 18600 },
+    { category: 'Skor', revenue: 8400000, pct: 17.1, orders: 12200 },
+    { category: 'Väskor', revenue: 6100000, pct: 12.5, orders: 8400 },
+    { category: 'Underkläder', revenue: 4200000, pct: 8.6, orders: 9800 },
+    { category: 'Hemtextil', revenue: 2530000, pct: 5.2, orders: 5200 },
+];
+
+// Top products
+const TOP_PRODUCTS = [
+    { name: 'Everyday Tee V-neck', category: 'Kläder', revenue: 1840000, units: 12400, inventory: 2180 },
+    { name: 'Classic Denim Jacket', category: 'Kläder', revenue: 1620000, units: 4200, inventory: 680 },
+    { name: 'Canvas Weekender Bag', category: 'Väskor', revenue: 1380000, units: 3100, inventory: 420 },
+    { name: 'Merino Wool Sweater', category: 'Kläder', revenue: 1290000, units: 5600, inventory: 1240 },
+    { name: 'Leather Chelsea Boots', category: 'Skor', revenue: 1180000, units: 2400, inventory: 380 },
+    { name: 'Silk Scarf Collection', category: 'Accessoarer', revenue: 980000, units: 4800, inventory: 1560 },
+    { name: 'Organic Cotton Hoodie', category: 'Kläder', revenue: 920000, units: 6200, inventory: 890 },
+    { name: 'Running Sneaker Pro', category: 'Skor', revenue: 860000, units: 3400, inventory: 520 },
+    { name: 'Linen Summer Dress', category: 'Kläder', revenue: 780000, units: 3100, inventory: 1840 },
+    { name: 'Everyday Crossbody', category: 'Väskor', revenue: 720000, units: 2800, inventory: 640 },
+];
+
+// Location data
+const LOCATION_DATA = [
+    { location: 'E-handel', orders: 38200, revenue: 21400000 },
+    { location: 'Lager Stockholm', orders: 22400, revenue: 12800000 },
+    { location: 'Lager Göteborg', orders: 14600, revenue: 8200000 },
+    { location: 'Butik Gaston 1', orders: 8200, revenue: 4100000 },
+    { location: 'Butik Gaston 2', orders: 5400, revenue: 2730000 },
+];
+
+// Product table with inventory status
+const PRODUCT_TABLE = [
+    { name: 'Everyday Tee V-neck', category: 'Kläder', price: 149, inventory: 2180, velocity: 1033, daysSupply: 63, status: 'high' },
+    { name: 'Classic Denim Jacket', category: 'Kläder', price: 1299, inventory: 680, velocity: 350, daysSupply: 58, status: 'high' },
+    { name: 'Canvas Weekender Bag', category: 'Väskor', price: 899, inventory: 420, velocity: 258, daysSupply: 49, status: 'medium' },
+    { name: 'Merino Wool Sweater', category: 'Kläder', price: 599, inventory: 1240, velocity: 467, daysSupply: 80, status: 'high' },
+    { name: 'Leather Chelsea Boots', category: 'Skor', price: 1899, inventory: 380, velocity: 200, daysSupply: 57, status: 'medium' },
+    { name: 'Silk Scarf Collection', category: 'Accessoarer', price: 349, inventory: 1560, velocity: 400, daysSupply: 117, status: 'high' },
+    { name: 'Organic Cotton Hoodie', category: 'Kläder', price: 449, inventory: 890, velocity: 517, daysSupply: 52, status: 'medium' },
+    { name: 'Running Sneaker Pro', category: 'Skor', price: 1199, inventory: 520, velocity: 283, daysSupply: 55, status: 'medium' },
+    { name: 'Linen Summer Dress', category: 'Kläder', price: 699, inventory: 1840, velocity: 258, daysSupply: 214, status: 'critical' },
+    { name: 'Everyday Crossbody', category: 'Väskor', price: 599, inventory: 640, velocity: 233, daysSupply: 82, status: 'high' },
+    { name: 'Bamboo Sock 3-pack', category: 'Underkläder', price: 149, inventory: 3200, velocity: 820, daysSupply: 117, status: 'high' },
+    { name: 'Cashmere Beanie', category: 'Accessoarer', price: 399, inventory: 210, velocity: 120, daysSupply: 53, status: 'medium' },
+    { name: 'Stretch Chino Slim', category: 'Kläder', price: 799, inventory: 960, velocity: 380, daysSupply: 76, status: 'high' },
+    { name: 'Waterproof Parka', category: 'Kläder', price: 2499, inventory: 140, velocity: 45, daysSupply: 93, status: 'low' },
+    { name: 'Loafer Classic Suede', category: 'Skor', price: 1499, inventory: 280, velocity: 110, daysSupply: 76, status: 'high' },
+    { name: 'Bomullsboxer 2-pack', category: 'Underkläder', price: 199, inventory: 2400, velocity: 640, daysSupply: 113, status: 'high' },
+    { name: 'Beach Towel XL', category: 'Hemtextil', price: 249, inventory: 1620, velocity: 180, daysSupply: 270, status: 'critical' },
+    { name: 'Flannel Shirt Check', category: 'Kläder', price: 549, inventory: 720, velocity: 290, daysSupply: 74, status: 'high' },
+    { name: 'Tote Bag Everyday', category: 'Väskor', price: 399, inventory: 480, velocity: 210, daysSupply: 69, status: 'medium' },
+    { name: 'Ullstrumpa Merino', category: 'Underkläder', price: 129, inventory: 1800, velocity: 420, daysSupply: 129, status: 'high' },
+];
+
+// ===== DASHBOARD CLASS =====
+class Dashboard {
+    constructor() {
+        this.charts = {};
+        this.sortCol = 'revenue';
+        this.sortDir = 'desc';
+        this.init();
+    }
+
+    init() {
+        this.populateFilters();
+        this.renderKPIs(MONTHLY_DATA);
+        this.createRevenueChart(MONTHLY_DATA);
+        this.createCategoryChart(CATEGORY_DATA);
+        this.createProductsChart(TOP_PRODUCTS);
+        this.createLocationsChart(LOCATION_DATA);
+        this.renderTable(PRODUCT_TABLE);
+    }
+
+    populateFilters() {
+        const catSelect = document.getElementById('filter-category');
+        CATEGORIES.forEach(c => {
+            const opt = document.createElement('option');
+            opt.value = c; opt.textContent = c;
+            catSelect.appendChild(opt);
+        });
+        const locSelect = document.getElementById('filter-location');
+        LOCATIONS.forEach(l => {
+            const opt = document.createElement('option');
+            opt.value = l; opt.textContent = l;
+            locSelect.appendChild(opt);
+        });
+    }
+
+    getFilteredMonths() {
+        const period = document.getElementById('filter-period').value;
+        if (period === 'all') return MONTHLY_DATA;
+        const qMap = { Q1: [0,1,2], Q2: [3,4,5], Q3: [6,7,8], Q4: [9,10,11] };
+        return MONTHLY_DATA.filter((_, i) => qMap[period].includes(i));
+    }
+
+    applyFilters() {
+        const filtered = this.getFilteredMonths();
+        this.renderKPIs(filtered);
+
+        // Update revenue chart
+        this.charts.revenue.data.labels = filtered.map(d => d.month);
+        this.charts.revenue.data.datasets[0].data = filtered.map(d => d.revenue);
+        this.charts.revenue.data.datasets[1].data = filtered.map(d => d.orders * 100);
+        this.charts.revenue.update('none');
+
+        // Filter table by category
+        const cat = document.getElementById('filter-category').value;
+        let tableData = PRODUCT_TABLE;
+        if (cat !== 'all') tableData = tableData.filter(p => p.category === cat);
+        this.renderTable(tableData);
+    }
+
+    renderKPIs(data) {
+        const totalRev = data.reduce((s, d) => s + d.revenue, 0);
+        const totalOrders = data.reduce((s, d) => s + d.orders, 0);
+        const totalCustomers = data.reduce((s, d) => s + d.customers, 0);
+        const totalReturns = data.reduce((s, d) => s + d.returns, 0);
+        const aov = totalOrders > 0 ? totalRev / totalOrders : 0;
+        const returnRate = totalOrders > 0 ? (totalReturns / totalOrders) * 100 : 0;
+
+        document.getElementById('kpi-revenue').textContent = this.fmtCurrency(totalRev);
+        document.getElementById('kpi-orders').textContent = totalOrders.toLocaleString('sv-SE');
+        document.getElementById('kpi-aov').textContent = Math.round(aov).toLocaleString('sv-SE') + ' kr';
+        document.getElementById('kpi-customers').textContent = totalCustomers.toLocaleString('sv-SE');
+        document.getElementById('kpi-returns').textContent = returnRate.toFixed(1) + '%';
+
+        // Change indicators (vs prior year mock)
+        this.setChange('kpi-revenue-change', 18.4);
+        this.setChange('kpi-orders-change', 22.1);
+        this.setChange('kpi-aov-change', -3.0);
+        this.setChange('kpi-customers-change', 15.8);
+        this.setChange('kpi-returns-change', -0.3, true);
+    }
+
+    setChange(id, pct, invertColor = false) {
+        const el = document.getElementById(id);
+        const sign = pct >= 0 ? '+' : '';
+        el.textContent = `${sign}${pct.toFixed(1)}% mot föregående år`;
+        const isPositive = invertColor ? pct <= 0 : pct >= 0;
+        el.className = `kpi-change ${isPositive ? 'positive' : 'negative'}`;
+    }
+
+    fmtCurrency(val) {
+        if (val >= 1e6) return (val / 1e6).toFixed(1).replace('.', ',') + ' Mkr';
+        if (val >= 1e3) return Math.round(val / 1e3).toLocaleString('sv-SE') + ' tkr';
+        return val.toLocaleString('sv-SE') + ' kr';
+    }
+
+    createRevenueChart(data) {
+        const ctx = document.getElementById('chart-revenue').getContext('2d');
+        this.charts.revenue = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: data.map(d => d.month),
+                datasets: [
+                    {
+                        label: 'Omsättning (kr)',
+                        data: data.map(d => d.revenue),
+                        backgroundColor: 'rgba(237,160,144,0.6)',
+                        borderColor: '#eda090',
+                        borderWidth: 1,
+                        borderRadius: 4,
+                        yAxisID: 'y',
+                        order: 2,
+                    },
+                    {
+                        label: 'Ordrar (index)',
+                        data: data.map(d => d.orders * 100),
+                        type: 'line',
+                        borderColor: '#7ba4d9',
+                        backgroundColor: 'rgba(123,164,217,0.1)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.3,
+                        pointRadius: 3,
+                        pointHoverRadius: 6,
+                        yAxisID: 'y',
+                        order: 1,
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: { mode: 'index', intersect: false },
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: { usePointStyle: true, padding: 16, color: '#9a98b8', font: { size: 11 } }
+                    },
+                    tooltip: {
+                        backgroundColor: '#1c2148',
+                        borderColor: '#2e3563',
+                        borderWidth: 1,
+                        titleColor: '#f0eff5',
+                        bodyColor: '#9a98b8',
+                        callbacks: {
+                            label: (ctx) => {
+                                if (ctx.datasetIndex === 0) return `Omsättning: ${this.fmtCurrency(ctx.parsed.y)}`;
+                                return `Ordrar: ${(ctx.parsed.y / 100).toLocaleString('sv-SE')}`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: { display: false, color: '#2e3563' },
+                        ticks: { color: '#9a98b8' }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        grid: { color: 'rgba(46,53,99,0.5)' },
+                        ticks: {
+                            color: '#9a98b8',
+                            callback: (v) => this.fmtCurrency(v)
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    createCategoryChart(data) {
+        const ctx = document.getElementById('chart-categories').getContext('2d');
+        this.charts.categories = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: data.map(d => d.category),
+                datasets: [{
+                    data: data.map(d => d.revenue),
+                    backgroundColor: COLORS.map(c => c + 'CC'),
+                    borderColor: '#1c2148',
+                    borderWidth: 3,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '55%',
+                plugins: {
+                    legend: {
+                        position: 'right',
+                        labels: { usePointStyle: true, padding: 12, color: '#9a98b8', font: { size: 11 } }
+                    },
+                    tooltip: {
+                        backgroundColor: '#1c2148',
+                        borderColor: '#2e3563',
+                        borderWidth: 1,
+                        titleColor: '#f0eff5',
+                        bodyColor: '#9a98b8',
+                        callbacks: {
+                            label: (ctx) => {
+                                const total = ctx.dataset.data.reduce((a, b) => a + b, 0);
+                                const pct = ((ctx.parsed / total) * 100).toFixed(1);
+                                return `${ctx.label}: ${this.fmtCurrency(ctx.parsed)} (${pct}%)`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    createProductsChart(data) {
+        const ctx = document.getElementById('chart-products').getContext('2d');
+        this.charts.products = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: data.map(d => d.name.length > 22 ? d.name.slice(0, 20) + '…' : d.name),
+                datasets: [{
+                    label: 'Omsättning',
+                    data: data.map(d => d.revenue),
+                    backgroundColor: COLORS.map(c => c + '99'),
+                    borderColor: COLORS,
+                    borderWidth: 1,
+                    borderRadius: 4,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                indexAxis: 'y',
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: '#1c2148',
+                        borderColor: '#2e3563',
+                        borderWidth: 1,
+                        callbacks: { label: (ctx) => this.fmtCurrency(ctx.parsed.x) }
+                    }
+                },
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        grid: { color: 'rgba(46,53,99,0.5)' },
+                        ticks: { color: '#9a98b8', callback: (v) => this.fmtCurrency(v) }
+                    },
+                    y: {
+                        grid: { display: false },
+                        ticks: { color: '#9a98b8', font: { size: 11 } }
+                    }
+                }
+            }
+        });
+    }
+
+    createLocationsChart(data) {
+        const ctx = document.getElementById('chart-locations').getContext('2d');
+        this.charts.locations = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: data.map(d => d.location),
+                datasets: [{
+                    label: 'Ordrar',
+                    data: data.map(d => d.orders),
+                    backgroundColor: COLORS.map(c => c + '99'),
+                    borderColor: COLORS,
+                    borderWidth: 1,
+                    borderRadius: 4,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: '#1c2148',
+                        borderColor: '#2e3563',
+                        borderWidth: 1,
+                        callbacks: { label: (ctx) => ctx.parsed.y.toLocaleString('sv-SE') + ' ordrar' }
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: { display: false },
+                        ticks: { color: '#9a98b8', font: { size: 10 }, maxRotation: 45 }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        grid: { color: 'rgba(46,53,99,0.5)' },
+                        ticks: { color: '#9a98b8', callback: (v) => v >= 1000 ? (v/1000) + 'k' : v }
+                    }
+                }
+            }
+        });
+    }
+
+    renderTable(data) {
+        const container = document.getElementById('product-table');
+        const sorted = [...data].sort((a, b) => {
+            const aVal = a[this.sortCol] ?? 0;
+            const bVal = b[this.sortCol] ?? 0;
+            return this.sortDir === 'desc' ? bVal - aVal : aVal - bVal;
+        });
+
+        const cols = [
+            { field: 'name', label: 'Produkt', type: 'text' },
+            { field: 'category', label: 'Kategori', type: 'text' },
+            { field: 'price', label: 'Pris', type: 'currency' },
+            { field: 'inventory', label: 'Lager', type: 'number' },
+            { field: 'velocity', label: 'Säljtakt/mån', type: 'number' },
+            { field: 'daysSupply', label: 'Dagar kvar', type: 'number' },
+            { field: 'status', label: 'Status', type: 'status' },
+        ];
+
+        let html = '<table class="data-table"><thead><tr>';
+        cols.forEach(col => {
+            const arrow = this.sortCol === col.field ? (this.sortDir === 'asc' ? ' ▲' : ' ▼') : '';
+            html += `<th onclick="dashboard.sortTable('${col.field}')">${col.label}${arrow}</th>`;
+        });
+        html += '</tr></thead><tbody>';
+
+        sorted.forEach(row => {
+            html += '<tr>';
+            cols.forEach(col => {
+                let val = row[col.field];
+                if (col.type === 'currency') val = val.toLocaleString('sv-SE') + ' kr';
+                else if (col.type === 'number') val = val.toLocaleString('sv-SE');
+                else if (col.type === 'status') {
+                    const labels = { high: 'Bra', medium: 'OK', low: 'Låg', critical: 'Överstock' };
+                    val = `<span class="status-tag status-${row.status}">${labels[row.status]}</span>`;
+                }
+                html += `<td>${val}</td>`;
+            });
+            html += '</tr>';
+        });
+        html += '</tbody></table>';
+        container.innerHTML = html;
+    }
+
+    sortTable(field) {
+        if (this.sortCol === field) {
+            this.sortDir = this.sortDir === 'desc' ? 'asc' : 'desc';
+        } else {
+            this.sortCol = field;
+            this.sortDir = 'desc';
+        }
+        const cat = document.getElementById('filter-category').value;
+        let data = PRODUCT_TABLE;
+        if (cat !== 'all') data = data.filter(p => p.category === cat);
+        this.renderTable(data);
+    }
+}
+
+const dashboard = new Dashboard();
+</script>
+</body>
+</html>
