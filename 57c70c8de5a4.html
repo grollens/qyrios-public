@@ -681,6 +681,23 @@
     .nav-btn span { display: none; }
     .nav-btn { padding: 10px 14px; }
   }
+
+  /* ===== PRINT / PDF EXPORT ===== */
+  @media print {
+    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; color-adjust: exact !important; }
+    html, body { background: #141833 !important; }
+    .slide-container { overflow: visible !important; }
+    .slide {
+      display: flex !important; opacity: 1 !important;
+      position: relative !important;
+      top: auto !important; left: auto !important; right: auto !important; bottom: auto !important;
+      transform: none !important; pointer-events: auto !important;
+      page-break-after: always; break-after: page;
+      min-height: 100vh; width: 100%;
+    }
+    .nav-bar, .kbd-hint { display: none !important; }
+    img[alt="Qyrios"] { position: fixed !important; bottom: 1rem !important; right: 1.5rem !important; opacity: 0.65 !important; }
+  }
 </style>
 </head>
 <body>
@@ -1422,7 +1439,7 @@
 
 
 <!-- ===== QYRIOS LOGO ===== -->
-<img src="assets/qyrios-logo-white.png" alt="Qyrios" style="position:fixed;bottom:1rem;right:1.5rem;height:28px;opacity:0.5;z-index:90;pointer-events:none;">
+<img src="assets/qyrios-logo-white.png" alt="Qyrios" style="position:fixed;bottom:1.2rem;right:1.5rem;height:36px;opacity:0.65;z-index:90;pointer-events:none;">
 
 <!-- ===== NAVIGATION BAR ===== -->
 <div class="nav-bar">
