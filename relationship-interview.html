@@ -198,9 +198,7 @@
           target: '#n8n-chat',
           mode: 'fullscreen',
           showWelcomeScreen: false,
-          initialMessages: [
-            `Laddar kontext för ${escapeHtml(name)}...`
-          ],
+          initialMessages: [],
           metadata: {
             draftId: draftId,
             contactId: contactId
@@ -214,6 +212,29 @@
               closeButtonTooltip: 'Stäng'
             }
           }
+        });
+
+        // Auto-start: wait for chat UI to render, then send initial message
+        const observer = new MutationObserver((mutations, obs) => {
+          const textarea = document.querySelector('.n8n-chat__textarea, .n8n-chat__input');
+          const sendBtn = document.querySelector('.n8n-chat__send-button');
+          if (textarea && sendBtn) {
+            obs.disconnect();
+            const setter = Object.getOwnPropertyDescriptor(
+              HTMLTextAreaElement.prototype, 'value'
+            )?.set || Object.getOwnPropertyDescriptor(
+              HTMLInputElement.prototype, 'value'
+            )?.set;
+            if (setter) {
+              setter.call(textarea, 'Hej');
+              textarea.dispatchEvent(new Event('input', { bubbles: true }));
+              textarea.dispatchEvent(new Event('change', { bubbles: true }));
+              setTimeout(() => sendBtn.click(), 300);
+            }
+          }
+        });
+        observer.observe(document.getElementById('n8n-chat'), {
+          childList: true, subtree: true
         });
 
         console.log('Chat initialized for contact:', name, 'draftId:', draftId);
