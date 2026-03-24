@@ -167,7 +167,7 @@
       app.innerHTML = `
         <div class="error-container">
           <h1>Saknar parametrar</h1>
-          <p>Inget draftId eller contactId hittades i URL:en. Oppna denna sida via lanken i Slack.</p>
+          <p>Inget draftId eller contactId hittades i URL:en. Öppna denna sida via länken i Slack.</p>
         </div>
       `;
     } else {
@@ -175,7 +175,7 @@
         <div class="interview-container">
           <div class="interview-header">
             <h1 class="interview-title">Dialog med ${escapeHtml(name)}</h1>
-            <p class="interview-topic">Forfina kommentarsforslag tillsammans</p>
+            <p class="interview-topic">Förfina kommentarsförslag tillsammans</p>
           </div>
           <div class="chat-wrapper">
             <div id="n8n-chat"></div>
@@ -193,7 +193,7 @@
           mode: 'fullscreen',
           showWelcomeScreen: false,
           initialMessages: [
-            `Laddar kontext for ${escapeHtml(name)}...`
+            `Laddar kontext för ${escapeHtml(name)}...`
           ],
           metadata: {
             draftId: draftId,
@@ -203,24 +203,12 @@
             en: {
               title: '',
               subtitle: '',
-              inputPlaceholder: 'Skriv ditt svar har...',
-              getStarted: 'Borja dialogen',
-              closeButtonTooltip: 'Stang'
+              inputPlaceholder: 'Skriv ditt svar här...',
+              getStarted: 'Börja dialogen',
+              closeButtonTooltip: 'Stäng'
             }
           }
         });
-
-        // Auto-send first message to trigger AI briefing
-        setTimeout(() => {
-          const input = document.querySelector('.n8n-chat__input');
-          const sendBtn = document.querySelector('.n8n-chat__send-button');
-          if (input && sendBtn) {
-            const nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype, 'value').set || Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set;
-            nativeInputValueSetter.call(input, 'Presentera kontakten och ditt forslag');
-            input.dispatchEvent(new Event('input', { bubbles: true }));
-            setTimeout(() => sendBtn.click(), 200);
-          }
-        }, 1500);
 
         console.log('Chat initialized for contact:', name, 'draftId:', draftId);
       } catch (error) {
@@ -229,7 +217,7 @@
           <div class="error-container" style="min-height: auto; padding: 3rem;">
             <h1>Kunde inte ladda chatten</h1>
             <p>Ett fel uppstod: ${error.message}</p>
-            <p>Forsok ladda om sidan.</p>
+            <p>Försök ladda om sidan.</p>
           </div>
         `;
       }
