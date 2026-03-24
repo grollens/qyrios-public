@@ -79,8 +79,8 @@
 
     #n8n-chat { width: 100%; height: 100%; }
 
-    .n8n-chat__window { border: none !important; border-radius: 0 !important; box-shadow: none !important; }
-    .n8n-chat__messages { padding: 1rem 1.5rem !important; }
+    .n8n-chat__window { border: none !important; border-radius: 0 !important; box-shadow: none !important; height: 100% !important; display: flex !important; flex-direction: column !important; }
+    .n8n-chat__messages { padding: 1rem 1.5rem !important; flex: 1 !important; overflow-y: auto !important; }
 
     .n8n-chat__message--bot .n8n-chat__message-content {
       background: #f0f9ff !important;
