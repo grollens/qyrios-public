@@ -49,7 +49,7 @@
       overflow: hidden;
       display: flex;
       flex-direction: column;
-      max-height: calc(100vh - 3rem);
+      height: calc(100vh - 3rem);
     }
 
     .interview-header {
@@ -72,16 +72,17 @@
     }
 
     .chat-wrapper {
-      flex: 1 1 0;
-      overflow: hidden;
+      flex: 1;
       min-height: 0;
-      position: relative;
+      display: flex;
+      flex-direction: column;
     }
 
-    #n8n-chat { width: 100%; height: 100%; position: absolute; top: 0; left: 0; right: 0; bottom: 0; }
+    #n8n-chat { flex: 1; min-height: 0; display: flex; flex-direction: column; }
 
-    .n8n-chat__window { border: none !important; border-radius: 0 !important; box-shadow: none !important; height: 100% !important; max-height: 100% !important; display: flex !important; flex-direction: column !important; }
-    .n8n-chat__messages-wrapper, .n8n-chat__messages { flex: 1 1 0 !important; min-height: 0 !important; overflow-y: auto !important; padding: 1rem 1.5rem !important; -webkit-overflow-scrolling: touch !important; }
+    .n8n-chat__window { border: none !important; border-radius: 0 !important; box-shadow: none !important; flex: 1 !important; min-height: 0 !important; display: flex !important; flex-direction: column !important; }
+    .n8n-chat__messages-wrapper { flex: 1 !important; min-height: 0 !important; overflow-y: auto !important; -webkit-overflow-scrolling: touch !important; }
+    .n8n-chat__messages { padding: 1rem 1.5rem !important; }
 
     .n8n-chat__message--bot .n8n-chat__message-content {
       background: #f0f9ff !important;
