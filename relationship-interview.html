@@ -99,15 +99,21 @@
       background: #ffffff !important;
     }
 
-    .n8n-chat__input {
+    .n8n-chat__input, .n8n-chat__textarea {
       border: 1px solid #e2e8f0 !important;
       border-radius: 0.75rem !important;
       padding: 0.875rem 1rem !important;
-      font-size: 0.9375rem !important;
+      font-size: 1rem !important;
       background: #f8fafc !important;
+      min-height: 2.75rem !important;
+      max-height: 10rem !important;
+      resize: vertical !important;
+      line-height: 1.5 !important;
+      overflow-y: auto !important;
+      field-sizing: content !important;
     }
 
-    .n8n-chat__input:focus {
+    .n8n-chat__input:focus, .n8n-chat__textarea:focus {
       border-color: #0ea5e9 !important;
       box-shadow: 0 0 0 3px rgba(14,165,233,0.1) !important;
       background: #ffffff !important;
