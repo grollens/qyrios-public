@@ -72,15 +72,16 @@
     }
 
     .chat-wrapper {
-      flex: 1;
+      flex: 1 1 0;
       overflow: hidden;
-      min-height: 400px;
+      min-height: 0;
+      position: relative;
     }
 
-    #n8n-chat { width: 100%; height: 100%; }
+    #n8n-chat { width: 100%; height: 100%; position: absolute; top: 0; left: 0; right: 0; bottom: 0; }
 
-    .n8n-chat__window { border: none !important; border-radius: 0 !important; box-shadow: none !important; height: 100% !important; display: flex !important; flex-direction: column !important; }
-    .n8n-chat__messages { padding: 1rem 1.5rem !important; flex: 1 !important; overflow-y: auto !important; }
+    .n8n-chat__window { border: none !important; border-radius: 0 !important; box-shadow: none !important; height: 100% !important; max-height: 100% !important; display: flex !important; flex-direction: column !important; }
+    .n8n-chat__messages-wrapper, .n8n-chat__messages { flex: 1 1 0 !important; min-height: 0 !important; overflow-y: auto !important; padding: 1rem 1.5rem !important; -webkit-overflow-scrolling: touch !important; }
 
     .n8n-chat__message--bot .n8n-chat__message-content {
       background: #f0f9ff !important;
@@ -107,10 +108,9 @@
       background: #f8fafc !important;
       min-height: 2.75rem !important;
       max-height: 10rem !important;
-      resize: vertical !important;
       line-height: 1.5 !important;
       overflow-y: auto !important;
-      field-sizing: content !important;
+      resize: none !important;
     }
 
     .n8n-chat__input:focus, .n8n-chat__textarea:focus {
@@ -235,6 +235,15 @@
         });
         observer.observe(document.getElementById('n8n-chat'), {
           childList: true, subtree: true
+        });
+
+        // Auto-resize textarea as user types
+        document.getElementById('n8n-chat').addEventListener('input', (e) => {
+          const el = e.target;
+          if (el.tagName === 'TEXTAREA') {
+            el.style.height = 'auto';
+            el.style.height = Math.min(el.scrollHeight, 160) + 'px';
+          }
         });
 
         console.log('Chat initialized for contact:', name, 'draftId:', draftId);
