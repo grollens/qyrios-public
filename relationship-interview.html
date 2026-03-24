@@ -192,6 +192,9 @@
           target: '#n8n-chat',
           mode: 'fullscreen',
           showWelcomeScreen: false,
+          initialMessages: [
+            `Laddar kontext for ${escapeHtml(name)}...`
+          ],
           metadata: {
             draftId: draftId,
             contactId: contactId
@@ -206,6 +209,18 @@
             }
           }
         });
+
+        // Auto-send first message to trigger AI briefing
+        setTimeout(() => {
+          const input = document.querySelector('.n8n-chat__input');
+          const sendBtn = document.querySelector('.n8n-chat__send-button');
+          if (input && sendBtn) {
+            const nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype, 'value').set || Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set;
+            nativeInputValueSetter.call(input, 'Presentera kontakten och ditt forslag');
+            input.dispatchEvent(new Event('input', { bubbles: true }));
+            setTimeout(() => sendBtn.click(), 200);
+          }
+        }, 1500);
 
         console.log('Chat initialized for contact:', name, 'draftId:', draftId);
       } catch (error) {
